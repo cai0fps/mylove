@@ -101,7 +101,7 @@ const stories = [
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142617_834.webp', duration: 5000, caption: "Nossas memórias ❤️" },
     { type: 'video', src: 'tela-wrapped/Video2.webm', duration: 3500, caption: "Teu sorriso...❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142657_499.webp', duration: 5000, caption: "Iluminas tudo!" },
-    { type: 'image', src: 'IMG_20251006_162932_318.webp', duration: 5000, caption: "Juntos sempre." },
+    { type: 'image', src: 'tela-wrapped/IMG_20251006_162932_318.webp', duration: 5000, caption: "Juntos sempre." },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142750_132.webp', duration: 5000, caption: "sempre meu nenem." },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_151428_109.webp', duration: 6000, caption: "Amo-te! ❤️" }
     
@@ -184,5 +184,6 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
+
 
 
