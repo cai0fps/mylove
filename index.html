@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Track & Wrapped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen pb-10 text-white overflow-x-hidden">
+
+    <div id="overlay" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="text-center animate-pulse">
+            <i class="fas fa-heart text-red-500 text-4xl mb-4"></i>
+            <h1 class="text-2xl font-bold mb-2">Para meu nenem❤️</h1>
+            <p class="text-gray-400 mb-6 text-sm">Toque para entrar</p>
+            
+            <button id="startSiteBtn" class="bg-white/10 border border-white/20 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/20 transition-all cursor-pointer">
+                Entrar ❤️
+            </button>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" src="videoplayback.weba" loop></audio>
+
+    <div id="mainScreen" class="max-w-md mx-auto p-4 flex flex-col gap-6 relative z-10">
+        
+        <div class="flex flex-col gap-4 p-4 rounded-2xl glass-card">
+            <div class="w-full aspect-square relative rounded-lg overflow-hidden shadow-2xl">
+                <img src="tela-inicial/1.jpg" alt="Capa do Álbum" class="w-full h-full object-cover">
+            </div>
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-bold text-white drop-shadow-md">Sonha Comigo</h1>
+                        <i class="fas fa-check-circle text-blue-400 text-lg"></i>
+                    </div>
+                    <p class="text-gray-200 text-sm">Nossa Música</p>
+                </div>
+                <i class="far fa-heart text-2xl text-green-400 cursor-pointer drop-shadow-sm"></i>
+            </div>
+            
+            <div class="w-full group">
+                <div class="w-full bg-gray-600/50 h-1 rounded-full overflow-hidden mt-2 group-hover:h-1.5 transition-all">
+                    <div class="bg-white h-full w-1/3 rounded-full relative animate-progress shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-200 mt-1 font-mono">
+                    <span>Play</span><span>∞</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center px-2">
+                <i class="fas fa-random text-gray-300 text-lg hover:text-white transition"></i>
+                <i class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+                
+                <button onclick="togglePlay()" aria-label="Reproduzir ou Pausar Música" class="w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border-none shadow-xl hover:shadow-2xl hover:shadow-white/20">
+                    <i id="playIcon" class="fas fa-play text-black text-2xl ml-1"></i>
+                </button>
+
+                <i class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+                <i class="fas fa-redo text-green-400 text-lg hover:text-green-300 transition"></i>
+            </div>
+        </div>
+
+        <div class="rounded-xl p-4 mt-2 glass-card">
+            <div class="relative w-full h-48 rounded-lg overflow-hidden mb-4 shadow-lg">
+                <img src="tela-inicial/sobre%20casal.jpg" alt="Foto do Casal" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 flex flex-col justify-end">
+                    <p class="text-white font-bold text-lg drop-shadow-md">Sobre nós</p>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-bold mb-1 drop-shadow-sm">Neves e Anderson</h2>
+            <p class="text-gray-300 text-sm mb-4">Juntos desde 2025</p>
+            
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="years" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Anos</span></div>
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="months" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Meses</span></div>
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="days" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Dias</span></div>
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="hours" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Horas</span></div>
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="minutes" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Min</span></div>
+                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="seconds" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Seg</span></div>
+            </div>
+        </div>
+
+        <div class="relative rounded-xl overflow-hidden h-48 flex flex-col justify-end p-4 shadow-2xl border border-white/10 glass-card">
+            <div class="absolute inset-0 bg-black z-0">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-600 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 animate-pulse"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-red-600 rounded-full blur-3xl opacity-60 translate-y-1/4 -translate-x-1/4 animate-pulse delay-1s"></div>
+            </div>
+            <div class="relative z-10">
+                <h2 class="text-3xl font-bold leading-tight mb-2 drop-shadow-lg">Seu<br>Relacionamento<br>Wrapped</h2>
+                <button onclick="startWrapped()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg cursor-pointer">Vamos lá</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="wrappedScreen" class="fixed inset-0 z-50 bg-black hidden flex-col items-center justify-center">
+        
+        <div class="story-container relative w-full h-full max-w-md bg-black">
+            <div class="absolute top-2 left-0 w-full px-2 flex gap-1 z-20" id="progressContainer"></div>
+
+            <div class="absolute top-6 left-0 w-full px-4 flex justify-between items-center z-20 text-white drop-shadow-md">
+                <div class="flex items-center gap-2">
+                    <img src="tela-inicial/1.jpg" alt="Avatar do Casal" class="w-8 h-8 rounded-full border border-white">
+                    <span class="font-bold text-sm">Nossa Retrospectiva</span>
+                </div>
+                <button onclick="closeWrapped()" aria-label="Fechar Wrapped" class="text-xl px-2"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="w-full h-full flex items-center justify-center bg-gray-900">
+                <img id="storyImage" src="" alt="Story Atual" class="w-full h-full object-cover hidden">
+                <video id="storyVideo" playsinline class="w-full h-full object-cover hidden"></video>
+            </div>
+
+            <div class="absolute bottom-10 w-full text-center z-20 px-4">
+                <p id="captionText" class="inline-block bg-black/50 px-4 py-2 rounded-xl text-white font-semibold backdrop-blur-sm"></p>
+            </div>
+
+            <div class="absolute top-0 left-0 w-1/3 h-full z-10" onclick="prevStory()"></div>
+            <div class="absolute top-0 right-0 w-2/3 h-full z-10" onclick="nextStory()"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
