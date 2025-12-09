@@ -96,10 +96,10 @@ updateCounter();
 
 // ==================== 5. WRAPPED (STORIES) ====================
 const stories = [
-    { type: 'video', src: 'tela-wrapped/VIDEO1.mp4', duration: 8000, caption: "amor da minha vida ❤️" },
+    { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8000, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 4000, caption: "Momentos únicos..." },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142617_834.webp', duration: 4000, caption: "Nossas memórias ❤️" },
-    { type: 'video', src: 'tela-wrapped/VIDEO2.mp4', duration: 3000, caption: "Teu sorriso...❤️" },
+    { type: 'video', src: 'tela-wrapped/Video2.webm', duration: 3000, caption: "Teu sorriso...❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142657_499.webp', duration: 4000, caption: "Iluminas tudo!" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142750_132.webp', duration: 4000, caption: "Juntos sempre." },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_151428_109.webp', duration: 5000, caption: "Amo-te! ❤️" }
@@ -180,4 +180,5 @@ function animateBar(duration) {
 }
 
 function nextStory() { showStory(currentIndex + 1); }
+
 function prevStory() { showStory(currentIndex - 1); }
