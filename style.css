@@ -67,3 +67,22 @@ body {
 .delay-1s {
     animation-delay: 1s;
 }
+
+/* ==================== EFEITO DE CORAÇÕES ==================== */
+.heart-bg {
+    position: fixed;
+    bottom: -10vh;
+    color: #ff4757; /* Cor vermelha/rosa vibrante */
+    font-size: 25px;
+    z-index: 0; /* Fica no fundo */
+    animation: floatUp linear forwards;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+    10% { opacity: 1; transform: scale(1); }
+    90% { opacity: 1; }
+    100% { transform: translateY(-120vh) rotate(360deg) scale(1.2); opacity: 0; }
+}
