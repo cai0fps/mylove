@@ -1,5 +1,5 @@
 // ==================== 1. VARIÁVEIS E SELEÇÃO ====================
-const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto (Janeiro é 0)
+const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto
 
 const audio = document.getElementById('audioPlayer');
 const playIcon = document.getElementById('playIcon');
@@ -7,6 +7,12 @@ const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('startSiteBtn');
 const songTitle = document.getElementById('songTitle');
 const songArtist = document.getElementById('songArtist');
+
+// Variáveis da Barra de Progresso
+const progressBar = document.getElementById('progressBar');
+const currentTimeEl = document.getElementById('currentTime');
+const totalDurationEl = document.getElementById('totalDuration');
+const progressBarContainer = document.getElementById('progressBarContainer');
 
 // Elementos do Wrapped
 const wrappedScreen = document.getElementById('wrappedScreen');
@@ -17,10 +23,10 @@ const progressContainer = document.getElementById('progressContainer');
 const captionText = document.getElementById('captionText');
 
 let isPlaying = false;
-let currentIndex = 0; // Índice para os stories
+let currentIndex = 0; 
 let storyTimer;
 
-// ==================== 2. PLAYLIST DE MÚSICA ====================
+// ==================== 2. PLAYLIST E ÁUDIO ====================
 const songs = [
     {
         title: "Sonha Comigo",
@@ -39,21 +45,24 @@ const songs = [
     }
 ];
 
-let songIndex = 0; // Começa na primeira música
+let songIndex = 0; 
 
-// Carrega a primeira música ao iniciar
+// Carrega a primeira música
 loadSong(songs[songIndex]);
 
 function loadSong(song) {
     audio.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
     if(songArtist) songArtist.innerText = song.artist;
+    // Reseta os tempos visuais ao trocar de música
+    if(currentTimeEl) currentTimeEl.innerText = "0:00";
+    if(progressBar) progressBar.style.width = "0%";
 }
 
 function prevSong() {
     songIndex--;
     if (songIndex < 0) {
-        songIndex = songs.length - 1; // Vai para a última
+        songIndex = songs.length - 1; 
     }
     loadSong(songs[songIndex]);
     if (isPlaying) audio.play();
@@ -62,7 +71,7 @@ function prevSong() {
 function nextSong() {
     songIndex++;
     if (songIndex > songs.length - 1) {
-        songIndex = 0; // Volta para a primeira
+        songIndex = 0; 
     }
     loadSong(songs[songIndex]);
     if (isPlaying) audio.play();
@@ -86,7 +95,51 @@ function togglePlay() {
     isPlaying = !isPlaying;
 }
 
-// ==================== 3. TELA DE ENTRADA ====================
+// ==================== 3. BARRA DE PROGRESSO (CORRIGIDO) ====================
+
+// Atualizar tempo e barra conforme a música toca
+audio.addEventListener('timeupdate', () => {
+    const current = audio.currentTime;
+    const duration = audio.duration;
+    
+    // 1. Atualiza SEMPRE o tempo atual
+    if(currentTimeEl) currentTimeEl.innerText = formatTime(current);
+
+    // 2. Só atualiza a barra e o total se a duração for válida
+    if (!isNaN(duration) && duration > 0) {
+        if(totalDurationEl) totalDurationEl.innerText = formatTime(duration);
+        const percent = (current / duration) * 100;
+        if(progressBar) progressBar.style.width = `${percent}%`;
+    }
+});
+
+// Garante que a duração total aparece assim que a música carrega os dados
+audio.addEventListener('loadedmetadata', () => {
+    if(totalDurationEl && !isNaN(audio.duration)) {
+        totalDurationEl.innerText = formatTime(audio.duration);
+    }
+});
+
+// Permitir clicar na barra para pular (Seek)
+function seek(event) {
+    const width = progressBarContainer.clientWidth;
+    const clickX = event.offsetX;
+    const duration = audio.duration;
+    
+    if(!isNaN(duration) && duration > 0) {
+        audio.currentTime = (clickX / width) * duration;
+    }
+}
+
+// Formatar segundos em Minutos:Segundos
+function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+// ==================== 4. TELA DE ENTRADA ====================
 if (startBtn && overlay) {
     startBtn.addEventListener('click', () => {
         if (audio) {
@@ -102,22 +155,21 @@ if (startBtn && overlay) {
     });
 }
 
-// ==================== 4. OUTRAS FUNÇÕES (Mensagem) ====================
+// ==================== 5. MENSAGEM ====================
 function toggleMessage() {
     const container = document.getElementById('messageContainer');
-    // Como o botão dispara o evento, pegamos o alvo (target)
     const btn = event.target; 
     
     if (container.style.height === "auto") {
         btn.innerText = "Ler tudo";
-        container.style.height = "10rem"; // Altura original
+        container.style.height = "10rem"; 
     } else {
         btn.innerText = "Recolher";
         container.style.height = "auto";
     }
 }
 
-// ==================== 5. CONTADOR ====================
+// ==================== 6. CONTADOR DE NAMORO ====================
 function updateCounter() {
     const now = new Date();
     const diff = now - startDate;
@@ -142,7 +194,7 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-// ==================== 6. WRAPPED (STORIES) ====================
+// ==================== 7. WRAPPED (STORIES) ====================
 const stories = [
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
@@ -161,7 +213,7 @@ function startWrapped() {
     mainScreen.style.display = 'none'; 
     wrappedScreen.classList.remove('hidden'); 
     wrappedScreen.classList.add('flex');
-    if(isPlaying) togglePlay(); // Pausa a música de fundo ao entrar nos stories
+    if(isPlaying) togglePlay(); 
     initProgressBars();
     showStory(0);
 }
@@ -234,5 +286,3 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
-
-
