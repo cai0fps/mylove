@@ -50,11 +50,14 @@ let songIndex = 0;
 // Carrega a primeira música
 loadSong(songs[songIndex]);
 
+// ---> AQUI: MUDANÇA AUTOMÁTICA DE MÚSICA <---
+audio.addEventListener('ended', nextSong);
+
 function loadSong(song) {
     audio.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
     if(songArtist) songArtist.innerText = song.artist;
-    // Reseta os tempos visuais ao trocar de música
+    // Reseta os tempos visuais
     if(currentTimeEl) currentTimeEl.innerText = "0:00";
     if(progressBar) progressBar.style.width = "0%";
 }
@@ -95,17 +98,13 @@ function togglePlay() {
     isPlaying = !isPlaying;
 }
 
-// ==================== 3. BARRA DE PROGRESSO (CORRIGIDO) ====================
-
-// Atualizar tempo e barra conforme a música toca
+// ==================== 3. BARRA DE PROGRESSO ====================
 audio.addEventListener('timeupdate', () => {
     const current = audio.currentTime;
     const duration = audio.duration;
     
-    // 1. Atualiza SEMPRE o tempo atual
     if(currentTimeEl) currentTimeEl.innerText = formatTime(current);
 
-    // 2. Só atualiza a barra e o total se a duração for válida
     if (!isNaN(duration) && duration > 0) {
         if(totalDurationEl) totalDurationEl.innerText = formatTime(duration);
         const percent = (current / duration) * 100;
@@ -113,14 +112,12 @@ audio.addEventListener('timeupdate', () => {
     }
 });
 
-// Garante que a duração total aparece assim que a música carrega os dados
 audio.addEventListener('loadedmetadata', () => {
     if(totalDurationEl && !isNaN(audio.duration)) {
         totalDurationEl.innerText = formatTime(audio.duration);
     }
 });
 
-// Permitir clicar na barra para pular (Seek)
 function seek(event) {
     const width = progressBarContainer.clientWidth;
     const clickX = event.offsetX;
@@ -131,7 +128,6 @@ function seek(event) {
     }
 }
 
-// Formatar segundos em Minutos:Segundos
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
     const min = Math.floor(seconds / 60);
@@ -194,7 +190,32 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-// ==================== 7. WRAPPED (STORIES) ====================
+// ==================== 7. CHUVA DE CORAÇÕES (A FUNÇÃO) ====================
+let heartInterval;
+
+function loveExplosion() {
+    // Cria corações rapidamente (a cada 100ms)
+    heartInterval = setInterval(createHeart, 100);
+    
+    // Para a chuva depois de 3 segundos
+    setTimeout(() => {
+        clearInterval(heartInterval);
+    }, 3000);
+}
+
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart-bg');
+    heart.innerHTML = '❤️'; 
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+    heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+    document.body.appendChild(heart);
+    
+    setTimeout(() => { heart.remove(); }, 5000);
+}
+
+// ==================== 8. WRAPPED (STORIES) ====================
 const stories = [
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
