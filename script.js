@@ -29,12 +29,12 @@ const songs = [
     },
     {
         title: "Nosso Amor",
-        artist: "Para Ti",
+        artist: "5km",
         src: "videoplayback2.webm"
     },
     {
         title: "Para Sempre",
-        artist: "Com Amor",
+        artist: "duas metadesr",
         src: "videoplayback3.webm"
     }
 ];
@@ -234,3 +234,4 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
+
