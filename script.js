@@ -34,7 +34,7 @@ const songs = [
     },
     {
         title: "Para Sempre",
-        artist: "duas metadesr",
+        artist: "duas metades",
         src: "videoplayback3.webm"
     }
 ];
@@ -234,4 +234,5 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
+
 
