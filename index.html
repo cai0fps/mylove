@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <audio id="audioPlayer" src="videoplayback.weba" loop></audio>
+    <audio id="audioPlayer" loop></audio>
 
     <div id="mainScreen" class="max-w-md mx-auto p-4 flex flex-col gap-6 relative z-10">
         
@@ -34,10 +34,10 @@
             <div class="flex justify-between items-end mt-2">
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-2xl font-bold text-white drop-shadow-md">Sonha Comigo</h1>
+                        <h1 id="songTitle" class="text-2xl font-bold text-white drop-shadow-md">Sonha Comigo</h1>
                         <i class="fas fa-check-circle text-blue-400 text-lg"></i>
                     </div>
-                    <p class="text-gray-200 text-sm">Nossa Música</p>
+                    <p id="songArtist" class="text-gray-200 text-sm">Nossa Música</p>
                 </div>
                 <i class="far fa-heart text-2xl text-green-400 cursor-pointer drop-shadow-sm"></i>
             </div>
@@ -53,13 +53,15 @@
 
             <div class="flex justify-between items-center px-2">
                 <i class="fas fa-random text-gray-300 text-lg hover:text-white transition"></i>
-                <i class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+                
+                <i onclick="prevSong()" class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
                 
                 <button onclick="togglePlay()" aria-label="Reproduzir" class="w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border-none shadow-xl hover:shadow-2xl hover:shadow-white/20">
                     <i id="playIcon" class="fas fa-play text-black text-2xl ml-1"></i>
                 </button>
 
-                <i class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+                <i onclick="nextSong()" class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+                
                 <i class="fas fa-redo text-green-400 text-lg hover:text-green-300 transition"></i>
             </div>
         </div>
@@ -139,6 +141,4 @@
     
     <script src="script.js"></script>
 </body>
-
 </html>
-
