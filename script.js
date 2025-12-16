@@ -1,10 +1,12 @@
 // ==================== 1. VARIÁVEIS E SELEÇÃO ====================
-const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto
+const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto (Janeiro é 0)
 
 const audio = document.getElementById('audioPlayer');
 const playIcon = document.getElementById('playIcon');
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('startSiteBtn');
+const songTitle = document.getElementById('songTitle');
+const songArtist = document.getElementById('songArtist');
 
 // Elementos do Wrapped
 const wrappedScreen = document.getElementById('wrappedScreen');
@@ -15,26 +17,56 @@ const progressContainer = document.getElementById('progressContainer');
 const captionText = document.getElementById('captionText');
 
 let isPlaying = false;
-let currentIndex = 0;
+let currentIndex = 0; // Índice para os stories
 let storyTimer;
 
-// ==================== 2. TELA DE ENTRADA (FIX RÁPIDO) ====================
-if (startBtn && overlay) {
-    startBtn.addEventListener('click', () => {
-        if (audio) {
-            audio.play().then(() => {
-                isPlaying = true;
-                if(playIcon) {
-                    playIcon.classList.remove('fa-play');
-                    playIcon.classList.add('fa-pause');
-                }
-            }).catch(e => console.log("Erro áudio:", e));
-        }
-        overlay.style.display = 'none'; // Some imediatamente
-    });
+// ==================== 2. PLAYLIST DE MÚSICA ====================
+const songs = [
+    {
+        title: "Sonha Comigo",
+        artist: "Nossa Música",
+        src: "videoplayback.weba"
+    },
+    {
+        title: "Nosso Amor",
+        artist: "Para Ti",
+        src: "videoplayback2.webm"
+    },
+    {
+        title: "Para Sempre",
+        artist: "Com Amor",
+        src: "videoplayback3.webm"
+    }
+];
+
+let songIndex = 0; // Começa na primeira música
+
+// Carrega a primeira música ao iniciar
+loadSong(songs[songIndex]);
+
+function loadSong(song) {
+    audio.src = song.src;
+    if(songTitle) songTitle.innerText = song.title;
+    if(songArtist) songArtist.innerText = song.artist;
 }
 
-// ==================== 3. LÓGICA GERAL ====================
+function prevSong() {
+    songIndex--;
+    if (songIndex < 0) {
+        songIndex = songs.length - 1; // Vai para a última
+    }
+    loadSong(songs[songIndex]);
+    if (isPlaying) audio.play();
+}
+
+function nextSong() {
+    songIndex++;
+    if (songIndex > songs.length - 1) {
+        songIndex = 0; // Volta para a primeira
+    }
+    loadSong(songs[songIndex]);
+    if (isPlaying) audio.play();
+}
 
 function togglePlay() {
     if (!audio) return;
@@ -54,11 +86,27 @@ function togglePlay() {
     isPlaying = !isPlaying;
 }
 
-// FUNÇÃO RESTAURADA: Mostrar/Ocultar Mensagem
+// ==================== 3. TELA DE ENTRADA ====================
+if (startBtn && overlay) {
+    startBtn.addEventListener('click', () => {
+        if (audio) {
+            audio.play().then(() => {
+                isPlaying = true;
+                if(playIcon) {
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                }
+            }).catch(e => console.log("Erro áudio:", e));
+        }
+        overlay.style.display = 'none';
+    });
+}
+
+// ==================== 4. OUTRAS FUNÇÕES (Mensagem) ====================
 function toggleMessage() {
     const container = document.getElementById('messageContainer');
-    // Como o botão está dentro do HTML, usamos o event para o encontrar
-    const btn = event.target;
+    // Como o botão dispara o evento, pegamos o alvo (target)
+    const btn = event.target; 
     
     if (container.style.height === "auto") {
         btn.innerText = "Ler tudo";
@@ -69,7 +117,7 @@ function toggleMessage() {
     }
 }
 
-// ==================== 4. CONTADOR ====================
+// ==================== 5. CONTADOR ====================
 function updateCounter() {
     const now = new Date();
     const diff = now - startDate;
@@ -94,7 +142,7 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-// ==================== 5. WRAPPED (STORIES) ====================
+// ==================== 6. WRAPPED (STORIES) ====================
 const stories = [
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
@@ -107,14 +155,13 @@ const stories = [
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142750_132.webp', duration: 5000, caption: "Sempre meu nenem.🥹" },
     { type: 'video', src: 'tela-wrapped/output.webm', duration: 4000, caption: "Sempre voce.😍" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_151428_109.webp', duration: 6000, caption: "Amo-te!❤️ " }
-    
 ];
 
 function startWrapped() {
     mainScreen.style.display = 'none'; 
     wrappedScreen.classList.remove('hidden'); 
     wrappedScreen.classList.add('flex');
-    if(isPlaying) togglePlay(); 
+    if(isPlaying) togglePlay(); // Pausa a música de fundo ao entrar nos stories
     initProgressBars();
     showStory(0);
 }
@@ -187,10 +234,3 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
-
-
-
-
-
-
-
