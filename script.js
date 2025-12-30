@@ -197,10 +197,10 @@ function loveExplosion() {
     // Cria corações rapidamente (a cada 100ms)
     heartInterval = setInterval(createHeart, 100);
     
-    // Para a chuva depois de 3 segundos
+    // Para a chuva depois de 4 segundos
     setTimeout(() => {
         clearInterval(heartInterval);
-    }, 3000);
+    }, 4000);
 }
 
 function createHeart() {
@@ -224,6 +224,7 @@ const stories = [
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142657_499.webp', duration: 5000, caption: "Iluminas tudo!✨" },
     { type: 'image', src: 'tela-wrapped/IMG_20251006_162932_318.webp', duration: 5000, caption: "Juntos sempre.🫂" },
     { type: 'image', src: 'tela-wrapped/sobre casal.jpg', duration: 6000, caption: "Meu mundo🌌" },
+    { type: 'video', src: 'tela-wrapped/VID_20251229_140651_619.mp4', duration: 5000, caption: "Cada nosso reencontro🥹" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_153004_275.webp', duration: 6000, caption: "Minha garotinha❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142750_132.webp', duration: 5000, caption: "Sempre meu nenem.🥹" },
     { type: 'video', src: 'tela-wrapped/output.webm', duration: 4000, caption: "Sempre voce.😍" },
@@ -307,3 +308,4 @@ function animateBar(duration) {
 function nextStory() { showStory(currentIndex + 1); }
 
 function prevStory() { showStory(currentIndex - 1); }
+
