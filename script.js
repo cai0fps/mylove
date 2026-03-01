@@ -8,13 +8,11 @@ const startBtn = document.getElementById('startSiteBtn');
 const songTitle = document.getElementById('songTitle');
 const songArtist = document.getElementById('songArtist');
 
-// Variáveis da Barra de Progresso
 const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
 const totalDurationEl = document.getElementById('totalDuration');
 const progressBarContainer = document.getElementById('progressBarContainer');
 
-// Elementos do Wrapped
 const wrappedScreen = document.getElementById('wrappedScreen');
 const mainScreen = document.getElementById('mainScreen');
 const storyImage = document.getElementById('storyImage');
@@ -28,54 +26,33 @@ let storyTimer;
 
 // ==================== 2. PLAYLIST E ÁUDIO ====================
 const songs = [
-    {
-        title: "Sonha Comigo",
-        artist: "Nossa Música",
-        src: "videoplayback.weba"
-    },
-    {
-        title: "Nosso Amor",
-        artist: "5km",
-        src: "videoplayback2.webm"
-    },
-    {
-        title: "Para Sempre",
-        artist: "duas metades",
-        src: "videoplayback3.webm"
-    }
+    { title: "Sonha Comigo", artist: "Nossa Música", src: "videoplayback.weba" },
+    { title: "Nosso Amor", artist: "5km", src: "videoplayback2.webm" },
+    { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" }
 ];
 
 let songIndex = 0; 
-
-// Carrega a primeira música
 loadSong(songs[songIndex]);
-
-// AQUI: MUDANÇA AUTOMÁTICA DE MÚSICA
 audio.addEventListener('ended', nextSong);
 
 function loadSong(song) {
     audio.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
     if(songArtist) songArtist.innerText = song.artist;
-    // Reseta os tempos visuais
     if(currentTimeEl) currentTimeEl.innerText = "0:00";
     if(progressBar) progressBar.style.width = "0%";
 }
 
 function prevSong() {
     songIndex--;
-    if (songIndex < 0) {
-        songIndex = songs.length - 1; 
-    }
+    if (songIndex < 0) songIndex = songs.length - 1; 
     loadSong(songs[songIndex]);
     if (isPlaying) audio.play();
 }
 
 function nextSong() {
     songIndex++;
-    if (songIndex > songs.length - 1) {
-        songIndex = 0; 
-    }
+    if (songIndex > songs.length - 1) songIndex = 0; 
     loadSong(songs[songIndex]);
     if (isPlaying) audio.play();
 }
@@ -84,16 +61,10 @@ function togglePlay() {
     if (!audio) return;
     if (isPlaying) {
         audio.pause();
-        if(playIcon) {
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-        }
+        if(playIcon) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); }
     } else {
         audio.play();
-        if(playIcon) {
-            playIcon.classList.remove('fa-play');
-            playIcon.classList.add('fa-pause');
-        }
+        if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
     }
     isPlaying = !isPlaying;
 }
@@ -102,9 +73,7 @@ function togglePlay() {
 audio.addEventListener('timeupdate', () => {
     const current = audio.currentTime;
     const duration = audio.duration;
-    
     if(currentTimeEl) currentTimeEl.innerText = formatTime(current);
-
     if (!isNaN(duration) && duration > 0) {
         if(totalDurationEl) totalDurationEl.innerText = formatTime(duration);
         const percent = (current / duration) * 100;
@@ -113,19 +82,14 @@ audio.addEventListener('timeupdate', () => {
 });
 
 audio.addEventListener('loadedmetadata', () => {
-    if(totalDurationEl && !isNaN(audio.duration)) {
-        totalDurationEl.innerText = formatTime(audio.duration);
-    }
+    if(totalDurationEl && !isNaN(audio.duration)) totalDurationEl.innerText = formatTime(audio.duration);
 });
 
 function seek(event) {
     const width = progressBarContainer.clientWidth;
     const clickX = event.offsetX;
     const duration = audio.duration;
-    
-    if(!isNaN(duration) && duration > 0) {
-        audio.currentTime = (clickX / width) * duration;
-    }
+    if(!isNaN(duration) && duration > 0) audio.currentTime = (clickX / width) * duration;
 }
 
 function formatTime(seconds) {
@@ -149,36 +113,32 @@ if (startBtn && overlay) {
         }
         overlay.style.display = 'none';
         
-        // Assim que entrar no site, começa a baixar os vídeos e fotos em segundo plano
+        // Função de pré-carregamento dos vídeos e imagens
         preloadMedia(); 
+        
+        // CHAMA A NOSSA NOVA FUNÇÃO DO DIA 9 AO ENTRAR!
+        checkDay9Surprise();
     });
 }
 
 function preloadMedia() {
     stories.forEach(story => {
         if (story.type === 'image') {
-            const img = new Image();
-            img.src = story.src;
+            const img = new Image(); img.src = story.src;
         } else if (story.type === 'video') {
-            const vid = document.createElement('video');
-            vid.preload = 'auto'; // Força o download na cache
-            vid.src = story.src;
+            const vid = document.createElement('video'); vid.preload = 'auto'; vid.src = story.src;
         }
     });
-    console.log("Ficheiros pré-carregados para evitar travamentos!");
 }
 
 // ==================== 5. MENSAGEM ====================
 function toggleMessage() {
     const container = document.getElementById('messageContainer');
     const btn = event.target; 
-    
     if (container.style.height === "auto") {
-        btn.innerText = "Ler tudo";
-        container.style.height = "10rem"; 
+        btn.innerText = "Ler tudo"; container.style.height = "10rem"; 
     } else {
-        btn.innerText = "Recolher";
-        container.style.height = "auto";
+        btn.innerText = "Recolher"; container.style.height = "auto";
     }
 }
 
@@ -212,9 +172,7 @@ let heartInterval;
 
 function loveExplosion() {
     heartInterval = setInterval(createHeart, 100);
-    setTimeout(() => {
-        clearInterval(heartInterval);
-    }, 4000);
+    setTimeout(() => { clearInterval(heartInterval); }, 4000);
 }
 
 function createHeart() {
@@ -225,7 +183,6 @@ function createHeart() {
     heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
     heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
     document.body.appendChild(heart);
-    
     setTimeout(() => { heart.remove(); }, 5000);
 }
 
@@ -266,12 +223,7 @@ function closeWrapped() {
     clearTimeout(storyTimer);
     clearTimeout(animationDelayTimer); 
     isPaused = false;
-    
-    if(storyVideo) {
-        storyVideo.pause();
-        storyVideo.src = ""; 
-    }
-    
+    if(storyVideo) { storyVideo.pause(); storyVideo.src = ""; }
     wrappedScreen.classList.add('hidden');
     wrappedScreen.classList.remove('flex');
     mainScreen.style.display = 'flex'; 
@@ -281,13 +233,9 @@ function initProgressBars() {
     if(!progressContainer) return;
     progressContainer.innerHTML = '';
     stories.forEach((_, index) => {
-        const bar = document.createElement('div');
-        bar.className = 'progress-bar';
-        const fill = document.createElement('div');
-        fill.className = 'progress-fill';
-        fill.id = `progress-${index}`;
-        bar.appendChild(fill);
-        progressContainer.appendChild(bar);
+        const bar = document.createElement('div'); bar.className = 'progress-bar';
+        const fill = document.createElement('div'); fill.className = 'progress-fill'; fill.id = `progress-${index}`;
+        bar.appendChild(fill); progressContainer.appendChild(bar);
     });
 }
 
@@ -295,32 +243,21 @@ function showStory(index) {
     if (index >= stories.length) { closeWrapped(); return; }
     if (index < 0) index = 0;
     
-    clearTimeout(storyTimer);
-    clearTimeout(animationDelayTimer);
-    isPaused = false;
-    
-    currentIndex = index;
-    const story = stories[index];
+    clearTimeout(storyTimer); clearTimeout(animationDelayTimer); isPaused = false;
+    currentIndex = index; const story = stories[index];
 
     stories.forEach((_, i) => {
         const fill = document.getElementById(`progress-${i}`);
-        if(fill) {
-            fill.style.transition = 'none'; 
-            fill.style.width = (i < index) ? '100%' : '0%';
-        }
+        if(fill) { fill.style.transition = 'none'; fill.style.width = (i < index) ? '100%' : '0%'; }
     });
 
     if (story.type === 'image') {
-        storyVideo.classList.add('hidden');
-        storyVideo.pause();
-        storyImage.classList.remove('hidden');
-        storyImage.src = story.src;
+        storyVideo.classList.add('hidden'); storyVideo.pause();
+        storyImage.classList.remove('hidden'); storyImage.src = story.src;
         animateBar(story.duration);
     } else {
-        storyImage.classList.add('hidden');
-        storyVideo.classList.remove('hidden');
-        storyVideo.src = story.src;
-        storyVideo.currentTime = 0;
+        storyImage.classList.add('hidden'); storyVideo.classList.remove('hidden');
+        storyVideo.src = story.src; storyVideo.currentTime = 0;
         storyVideo.play().catch(e => console.log("Erro vídeo:", e));
         animateBar(story.duration);
     }
@@ -329,93 +266,60 @@ function showStory(index) {
 
 function animateBar(duration) {
     const fill = document.getElementById(`progress-${currentIndex}`);
-    
-    storyRemainingTime = duration;
-    storyStartTime = Date.now(); 
-    
+    storyRemainingTime = duration; storyStartTime = Date.now(); 
     if(fill) {
-        fill.style.transition = 'none';
-        fill.style.width = '0%';
-        
+        fill.style.transition = 'none'; fill.style.width = '0%';
         animationDelayTimer = setTimeout(() => {
             if(isPaused) return; 
-            fill.style.transition = `width ${storyRemainingTime}ms linear`;
-            fill.style.width = '100%';
+            fill.style.transition = `width ${storyRemainingTime}ms linear`; fill.style.width = '100%';
         }, 50);
     }
-    
     storyTimer = setTimeout(() => { nextStory(); }, storyRemainingTime);
 }
 
-// --- LÓGICA DE PAUSAR / RETOMAR ---
 function pauseStory() {
     if(isPaused) return;
     isPaused = true;
-    
-    clearTimeout(storyTimer);
-    clearTimeout(animationDelayTimer);
-    
+    clearTimeout(storyTimer); clearTimeout(animationDelayTimer);
     storyRemainingTime -= (Date.now() - storyStartTime);
-
-    if (stories[currentIndex].type === 'video' && !storyVideo.paused) {
-        storyVideo.pause();
-    }
-
+    if (stories[currentIndex].type === 'video' && !storyVideo.paused) storyVideo.pause();
     const fill = document.getElementById(`progress-${currentIndex}`);
     if (fill) {
         const computedWidth = window.getComputedStyle(fill).width;
-        fill.style.transition = 'none'; 
-        fill.style.width = computedWidth; 
+        fill.style.transition = 'none'; fill.style.width = computedWidth; 
     }
 }
 
 function resumeStory() {
     if(!isPaused) return;
     isPaused = false;
-
-    if (stories[currentIndex].type === 'video') {
-        storyVideo.play().catch(e => console.log(e));
-    }
-
+    if (stories[currentIndex].type === 'video') storyVideo.play().catch(e => console.log(e));
     const fill = document.getElementById(`progress-${currentIndex}`);
     if (fill) {
-        fill.style.transition = `width ${storyRemainingTime}ms linear`;
-        fill.style.width = '100%';
+        fill.style.transition = `width ${storyRemainingTime}ms linear`; fill.style.width = '100%';
     }
-
     storyStartTime = Date.now();
     storyTimer = setTimeout(() => { nextStory(); }, storyRemainingTime);
 }
 
-// --- EVENTOS DE TOQUE (CLIQUE E SEGURAR) ---
 function setupStoryControls() {
     const leftZone = document.getElementById('leftZone');
     const rightZone = document.getElementById('rightZone');
 
     function handlePointerDown(e, action) {
         isHolding = false;
-        holdTimer = setTimeout(() => {
-            isHolding = true;
-            pauseStory();
-        }, 200); 
+        holdTimer = setTimeout(() => { isHolding = true; pauseStory(); }, 200); 
     }
 
     function handlePointerUp(action) {
         clearTimeout(holdTimer);
-        
-        if (isHolding) {
-            resumeStory();
-        } else {
-            if (action === 'next') nextStory();
-            else prevStory();
-        }
+        if (isHolding) resumeStory();
+        else { if (action === 'next') nextStory(); else prevStory(); }
         isHolding = false;
     }
 
-    leftZone.replaceWith(leftZone.cloneNode(true));
-    rightZone.replaceWith(rightZone.cloneNode(true));
-    const newLeft = document.getElementById('leftZone');
-    const newRight = document.getElementById('rightZone');
+    leftZone.replaceWith(leftZone.cloneNode(true)); rightZone.replaceWith(rightZone.cloneNode(true));
+    const newLeft = document.getElementById('leftZone'); const newRight = document.getElementById('rightZone');
 
     newLeft.addEventListener('pointerdown', (e) => handlePointerDown(e, 'prev'));
     newLeft.addEventListener('pointerup', () => handlePointerUp('prev'));
@@ -428,3 +332,68 @@ function setupStoryControls() {
 
 function nextStory() { showStory(currentIndex + 1); }
 function prevStory() { showStory(currentIndex - 1); }
+
+
+// ==================== 9. SURPRESAS ESCONDIDAS (EASTER EGGS) ====================
+
+// Lógica para verificar se é dia 9
+function checkDay9Surprise() {
+    const hoje = new Date();
+    // getDate() devolve o dia do mês (1 a 31)
+    if (hoje.getDate() === 9) {
+        const popup = document.getElementById('day9Popup');
+        const card = document.getElementById('day9Card');
+        
+        if(popup && card) {
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            
+            // Pequeno delay para a animação de entrada ficar fluída
+            setTimeout(() => {
+                popup.classList.remove('opacity-0');
+                popup.classList.add('opacity-100');
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+                
+                // Faz uma chuva de corações automaticamente!
+                loveExplosion(); 
+            }, 100);
+        }
+    }
+}
+
+// Fechar o pop-up do dia 9
+function closeDay9Popup() {
+    const popup = document.getElementById('day9Popup');
+    const card = document.getElementById('day9Card');
+    
+    if(popup && card) {
+        popup.classList.remove('opacity-100');
+        popup.classList.add('opacity-0');
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+        
+        setTimeout(() => {
+            popup.classList.add('hidden');
+            popup.classList.remove('flex');
+        }, 500); // Aguarda a animação acabar para esconder
+    }
+}
+
+// Lógica do botão escondido "Juntos desde 2025" (Abre a carta secreta)
+function openSecretLetter() {
+    const modal = document.getElementById('secretLetterModal');
+    if(modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+// Fecha a carta secreta
+function closeSecretLetter() {
+    const modal = document.getElementById('secretLetterModal');
+    if(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
