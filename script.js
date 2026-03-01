@@ -340,7 +340,7 @@ function prevStory() { showStory(currentIndex - 1); }
 function checkDay9Surprise() {
     const hoje = new Date();
     // getDate() devolve o dia do mês (1 a 31)
-    if (hoje.getDate() === 9) {
+    if (hoje.getDate() === hoje.getDate()) {
         const popup = document.getElementById('day9Popup');
         const card = document.getElementById('day9Card');
         
@@ -397,3 +397,4 @@ function closeSecretLetter() {
         modal.classList.remove('flex');
     }
 }
+
