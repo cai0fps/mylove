@@ -50,7 +50,7 @@ let songIndex = 0;
 // Carrega a primeira música
 loadSong(songs[songIndex]);
 
-// ---> AQUI: MUDANÇA AUTOMÁTICA DE MÚSICA <---
+// AQUI: MUDANÇA AUTOMÁTICA DE MÚSICA
 audio.addEventListener('ended', nextSong);
 
 function loadSong(song) {
@@ -135,7 +135,7 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// ==================== 4. TELA DE ENTRADA ====================
+// ==================== 4. TELA DE ENTRADA E PRELOAD ====================
 if (startBtn && overlay) {
     startBtn.addEventListener('click', () => {
         if (audio) {
@@ -148,7 +148,24 @@ if (startBtn && overlay) {
             }).catch(e => console.log("Erro áudio:", e));
         }
         overlay.style.display = 'none';
+        
+        // Assim que entrar no site, começa a baixar os vídeos e fotos em segundo plano
+        preloadMedia(); 
     });
+}
+
+function preloadMedia() {
+    stories.forEach(story => {
+        if (story.type === 'image') {
+            const img = new Image();
+            img.src = story.src;
+        } else if (story.type === 'video') {
+            const vid = document.createElement('video');
+            vid.preload = 'auto'; // Força o download na cache
+            vid.src = story.src;
+        }
+    });
+    console.log("Ficheiros pré-carregados para evitar travamentos!");
 }
 
 // ==================== 5. MENSAGEM ====================
@@ -190,14 +207,11 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-// ==================== 7. CHUVA DE CORAÇÕES (A FUNÇÃO) ====================
+// ==================== 7. CHUVA DE CORAÇÕES ====================
 let heartInterval;
 
 function loveExplosion() {
-    // Cria corações rapidamente (a cada 100ms)
     heartInterval = setInterval(createHeart, 100);
-    
-    // Para a chuva depois de 4 segundos
     setTimeout(() => {
         clearInterval(heartInterval);
     }, 4000);
@@ -215,7 +229,7 @@ function createHeart() {
     setTimeout(() => { heart.remove(); }, 5000);
 }
 
-// ==================== 8. WRAPPED (STORIES) ====================
+// ==================== 8. WRAPPED (STORIES) - PRELOAD E PAUSAR ====================
 const stories = [
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
@@ -231,18 +245,33 @@ const stories = [
     { type: 'image', src: 'tela-wrapped/IMG_20251009_151428_109.webp', duration: 6000, caption: "Amo-te!❤️ " }
 ];
 
+let animationDelayTimer; 
+let isPaused = false;
+let storyStartTime = 0;
+let storyRemainingTime = 0;
+let holdTimer; 
+let isHolding = false;
+
 function startWrapped() {
     mainScreen.style.display = 'none'; 
     wrappedScreen.classList.remove('hidden'); 
     wrappedScreen.classList.add('flex');
     if(isPlaying) togglePlay(); 
     initProgressBars();
+    setupStoryControls();
     showStory(0);
 }
 
 function closeWrapped() {
     clearTimeout(storyTimer);
-    if(storyVideo) storyVideo.pause();
+    clearTimeout(animationDelayTimer); 
+    isPaused = false;
+    
+    if(storyVideo) {
+        storyVideo.pause();
+        storyVideo.src = ""; 
+    }
+    
     wrappedScreen.classList.add('hidden');
     wrappedScreen.classList.remove('flex');
     mainScreen.style.display = 'flex'; 
@@ -265,13 +294,18 @@ function initProgressBars() {
 function showStory(index) {
     if (index >= stories.length) { closeWrapped(); return; }
     if (index < 0) index = 0;
+    
+    clearTimeout(storyTimer);
+    clearTimeout(animationDelayTimer);
+    isPaused = false;
+    
     currentIndex = index;
     const story = stories[index];
 
     stories.forEach((_, i) => {
         const fill = document.getElementById(`progress-${i}`);
         if(fill) {
-            fill.style.transition = 'none';
+            fill.style.transition = 'none'; 
             fill.style.width = (i < index) ? '100%' : '0%';
         }
     });
@@ -294,18 +328,103 @@ function showStory(index) {
 }
 
 function animateBar(duration) {
-    clearTimeout(storyTimer);
     const fill = document.getElementById(`progress-${currentIndex}`);
+    
+    storyRemainingTime = duration;
+    storyStartTime = Date.now(); 
+    
     if(fill) {
-        setTimeout(() => {
-            fill.style.transition = `width ${duration}ms linear`;
+        fill.style.transition = 'none';
+        fill.style.width = '0%';
+        
+        animationDelayTimer = setTimeout(() => {
+            if(isPaused) return; 
+            fill.style.transition = `width ${storyRemainingTime}ms linear`;
             fill.style.width = '100%';
         }, 50);
     }
-    storyTimer = setTimeout(() => { nextStory(); }, duration);
+    
+    storyTimer = setTimeout(() => { nextStory(); }, storyRemainingTime);
+}
+
+// --- LÓGICA DE PAUSAR / RETOMAR ---
+function pauseStory() {
+    if(isPaused) return;
+    isPaused = true;
+    
+    clearTimeout(storyTimer);
+    clearTimeout(animationDelayTimer);
+    
+    storyRemainingTime -= (Date.now() - storyStartTime);
+
+    if (stories[currentIndex].type === 'video' && !storyVideo.paused) {
+        storyVideo.pause();
+    }
+
+    const fill = document.getElementById(`progress-${currentIndex}`);
+    if (fill) {
+        const computedWidth = window.getComputedStyle(fill).width;
+        fill.style.transition = 'none'; 
+        fill.style.width = computedWidth; 
+    }
+}
+
+function resumeStory() {
+    if(!isPaused) return;
+    isPaused = false;
+
+    if (stories[currentIndex].type === 'video') {
+        storyVideo.play().catch(e => console.log(e));
+    }
+
+    const fill = document.getElementById(`progress-${currentIndex}`);
+    if (fill) {
+        fill.style.transition = `width ${storyRemainingTime}ms linear`;
+        fill.style.width = '100%';
+    }
+
+    storyStartTime = Date.now();
+    storyTimer = setTimeout(() => { nextStory(); }, storyRemainingTime);
+}
+
+// --- EVENTOS DE TOQUE (CLIQUE E SEGURAR) ---
+function setupStoryControls() {
+    const leftZone = document.getElementById('leftZone');
+    const rightZone = document.getElementById('rightZone');
+
+    function handlePointerDown(e, action) {
+        isHolding = false;
+        holdTimer = setTimeout(() => {
+            isHolding = true;
+            pauseStory();
+        }, 200); 
+    }
+
+    function handlePointerUp(action) {
+        clearTimeout(holdTimer);
+        
+        if (isHolding) {
+            resumeStory();
+        } else {
+            if (action === 'next') nextStory();
+            else prevStory();
+        }
+        isHolding = false;
+    }
+
+    leftZone.replaceWith(leftZone.cloneNode(true));
+    rightZone.replaceWith(rightZone.cloneNode(true));
+    const newLeft = document.getElementById('leftZone');
+    const newRight = document.getElementById('rightZone');
+
+    newLeft.addEventListener('pointerdown', (e) => handlePointerDown(e, 'prev'));
+    newLeft.addEventListener('pointerup', () => handlePointerUp('prev'));
+    newLeft.addEventListener('pointercancel', () => handlePointerUp('prev')); 
+
+    newRight.addEventListener('pointerdown', (e) => handlePointerDown(e, 'next'));
+    newRight.addEventListener('pointerup', () => handlePointerUp('next'));
+    newRight.addEventListener('pointercancel', () => handlePointerUp('next'));
 }
 
 function nextStory() { showStory(currentIndex + 1); }
-
 function prevStory() { showStory(currentIndex - 1); }
-
