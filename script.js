@@ -29,6 +29,7 @@ const songs = [
     { title: "Sonha Comigo", artist: "Nossa Música", src: "videoplayback.weba" },
     { title: "Nosso Amor", artist: "5km", src: "videoplayback2.webm" },
     { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" }
+    { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" }
 ];
 
 let songIndex = 0; 
@@ -457,3 +458,4 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
