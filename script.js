@@ -1,5 +1,5 @@
 // ==================== 1. VARIÁVEIS E SELEÇÃO ====================
-const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto
+const startDate = new Date(2025, 7, 9); // Mês 7 = Agosto (Index 0 = Janeiro)
 
 const audio = document.getElementById('audioPlayer');
 const playIcon = document.getElementById('playIcon');
@@ -47,14 +47,18 @@ function prevSong() {
     songIndex--;
     if (songIndex < 0) songIndex = songs.length - 1; 
     loadSong(songs[songIndex]);
-    if (isPlaying) audio.play();
+    if (isPlaying) {
+        audio.play().catch(e => console.error("Erro ao reproduzir:", e));
+    }
 }
 
 function nextSong() {
     songIndex++;
     if (songIndex > songs.length - 1) songIndex = 0; 
     loadSong(songs[songIndex]);
-    if (isPlaying) audio.play();
+    if (isPlaying) {
+        audio.play().catch(e => console.error("Erro ao reproduzir:", e));
+    }
 }
 
 function togglePlay() {
@@ -62,11 +66,13 @@ function togglePlay() {
     if (isPlaying) {
         audio.pause();
         if(playIcon) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); }
+        isPlaying = false;
     } else {
-        audio.play();
-        if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
+        audio.play().then(() => {
+            if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
+            isPlaying = true;
+        }).catch(e => console.error("Erro ao reproduzir áudio:", e));
     }
-    isPlaying = !isPlaying;
 }
 
 // ==================== 3. BARRA DE PROGRESSO ====================
@@ -85,9 +91,11 @@ audio.addEventListener('loadedmetadata', () => {
     if(totalDurationEl && !isNaN(audio.duration)) totalDurationEl.innerText = formatTime(audio.duration);
 });
 
+// BUG CORRIGIDO: Barra de progresso saltava se o clique não fosse exato
 function seek(event) {
-    const width = progressBarContainer.clientWidth;
-    const clickX = event.offsetX;
+    const rect = progressBarContainer.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const width = rect.width;
     const duration = audio.duration;
     if(!isNaN(duration) && duration > 0) audio.currentTime = (clickX / width) * duration;
 }
@@ -109,18 +117,15 @@ if (startBtn && overlay) {
                     playIcon.classList.remove('fa-play');
                     playIcon.classList.add('fa-pause');
                 }
-            }).catch(e => console.log("Erro áudio:", e));
+            }).catch(e => console.log("Áudio bloqueado pelo browser:", e));
         }
         overlay.style.display = 'none';
         
-        // Inicia o Lazy Loading carregando apenas os primeiros itens
         preloadMedia(0); 
-        
         checkDay9Surprise();
     });
 }
 
-// Lazy Load: Carrega a mídia atual e apenas a seguinte para poupar dados/memória
 function preloadMedia(index) {
     const load = (story) => {
         if (!story) return;
@@ -136,13 +141,17 @@ function preloadMedia(index) {
 }
 
 // ==================== 5. MENSAGEM ====================
-function toggleMessage() {
+// BUG CORRIGIDO: Melhor gestão de eventos e estilos para funcionar no telemóvel
+function toggleMessage(btn) {
     const container = document.getElementById('messageContainer');
-    const btn = event.target; 
-    if (container.style.height === "auto") {
-        btn.innerText = "Ler tudo"; container.style.height = "10rem"; 
+    if (container.classList.contains('h-40')) {
+        btn.innerText = "Recolher"; 
+        container.classList.remove('h-40');
+        container.classList.add('h-auto');
     } else {
-        btn.innerText = "Recolher"; container.style.height = "auto";
+        btn.innerText = "Ler tudo"; 
+        container.classList.remove('h-auto');
+        container.classList.add('h-40');
     }
 }
 
@@ -250,7 +259,6 @@ function showStory(index) {
     clearTimeout(storyTimer); clearTimeout(animationDelayTimer); isPaused = false;
     currentIndex = index; const story = stories[index];
 
-    // Chamada do Lazy Load para o próximo item
     preloadMedia(currentIndex);
 
     stories.forEach((_, i) => {
