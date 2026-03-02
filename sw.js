@@ -1,12 +1,18 @@
+// Aumente o número da versão para forçar a atualização do cache
 const CACHE_NAME = 'mylove-cache-v5';
+
+// Arquivos locais cruciais para o funcionamento offline
 const localUrlsToCache = [
     './',
     './index.html',
     './style.css',
     './script.js',
-    './manifest.json'
+    './manifest.json',
+    // Adicionando a nova imagem ao cache local
+    './tela-inicial/nova.jpg' 
 ];
 
+// Bibliotecas externas que precisam de tratamento especial
 const externalUrlsToCache = [
     'https://cdn.tailwindcss.com',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
@@ -21,6 +27,7 @@ self.addEventListener('install', event => {
                 cache.addAll(localUrlsToCache);
                 
                 // Fetch de dependências externas ignorando bloqueio de CORS
+                // Isso resolve o erro de 'Failed to fetch' na instalação
                 return Promise.all(
                     externalUrlsToCache.map(url => {
                         return fetch(new Request(url, { mode: 'no-cors' }))
@@ -38,8 +45,9 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
+                    // Limpa caches antigas para evitar conflitos
                     if (cache !== CACHE_NAME) {
-                        return caches.delete(cache); // Limpa cache velha
+                        return caches.delete(cache);
                     }
                 })
             );
@@ -48,7 +56,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // Evita cachear extensões ou esquemas não HTTP/HTTPS
+    // Evita cachear extensões do navegador ou esquemas não HTTP/HTTPS
     if (!event.request.url.startsWith('http')) return;
 
     event.respondWith(
@@ -57,7 +65,7 @@ self.addEventListener('fetch', event => {
                 // Devolve a versão em cache se existir, caso contrário busca na internet
                 return response || fetch(event.request).then(fetchRes => {
                     return caches.open(CACHE_NAME).then(cache => {
-                        // Guarda na cache os novos recursos que forem sendo carregados
+                        // Guarda na cache os novos recursos que forem sendo carregados dinamicamente
                         if(event.request.method === 'GET') {
                             cache.put(event.request, fetchRes.clone());
                         }
@@ -65,7 +73,7 @@ self.addEventListener('fetch', event => {
                     });
                 });
             }).catch(() => {
-                // Proteção contra falha total
+                // Proteção contra falha total de conexão
                 return new Response('Conteúdo offline não disponível.');
             })
     );
