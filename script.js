@@ -211,7 +211,7 @@ const stories = [
     { type: 'video', src: 'tela-wrapped/Video2.webm', duration: 3500, caption: "Teu sorriso...❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142657_499.webp', duration: 5000, caption: "Iluminas tudo!✨" },
     { type: 'image', src: 'tela-wrapped/IMG_20251006_162932_318.webp', duration: 5000, caption: "Juntos sempre.🫂" },
-    { type: 'image', src: 'tela-wrapped/sobre casal.jpg', duration: 6000, caption: "Meu mundo🌌" },
+    { type: 'image', src: 'tela-wrapped/sobre_casal.jpg', duration: 6000, caption: "Meu mundo🌌" },
     { type: 'video', src: 'tela-wrapped/VID_20251229_140651_619.mp4', duration: 5000, caption: "Cada nosso reencontro🥹" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_153004_275.webp', duration: 6000, caption: "Minha garotinha❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142750_132.webp', duration: 5000, caption: "Sempre meu nenem.🥹" },
