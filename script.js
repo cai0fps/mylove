@@ -217,7 +217,7 @@ function createHeart() {
 
 // ==================== 8. WRAPPED (STORIES) ====================
 const stories = [
-    { type: 'video', src: 'tela-wrapped/img2.jpg', duration: 8500, caption: "Eu vejo você longe e quero você perto❤️" },    
+    { type: 'image', src: 'tela-wrapped/img2.jpg', duration: 8500, caption: "Eu vejo você longe e quero você perto❤️" },    
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️🌠" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142617_834.webp', duration: 5000, caption: "Nossas memórias ❤️" },
@@ -467,6 +467,7 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
 
 
 
