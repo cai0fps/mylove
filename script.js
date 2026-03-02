@@ -99,7 +99,7 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// ==================== 4. TELA DE ENTRADA E PRELOAD ====================
+// ==================== 4. TELA DE ENTRADA E PRELOAD (LAZY LOAD) ====================
 if (startBtn && overlay) {
     startBtn.addEventListener('click', () => {
         if (audio) {
@@ -113,22 +113,26 @@ if (startBtn && overlay) {
         }
         overlay.style.display = 'none';
         
-        // Função de pré-carregamento dos vídeos e imagens
-        preloadMedia(); 
+        // Inicia o Lazy Loading carregando apenas os primeiros itens
+        preloadMedia(0); 
         
-        // CHAMA A NOSSA NOVA FUNÇÃO DO DIA 9 AO ENTRAR!
         checkDay9Surprise();
     });
 }
 
-function preloadMedia() {
-    stories.forEach(story => {
+// Lazy Load: Carrega a mídia atual e apenas a seguinte para poupar dados/memória
+function preloadMedia(index) {
+    const load = (story) => {
+        if (!story) return;
         if (story.type === 'image') {
             const img = new Image(); img.src = story.src;
         } else if (story.type === 'video') {
             const vid = document.createElement('video'); vid.preload = 'auto'; vid.src = story.src;
         }
-    });
+    };
+    
+    if (index < stories.length) load(stories[index]);
+    if (index + 1 < stories.length) load(stories[index + 1]);
 }
 
 // ==================== 5. MENSAGEM ====================
@@ -186,7 +190,7 @@ function createHeart() {
     setTimeout(() => { heart.remove(); }, 5000);
 }
 
-// ==================== 8. WRAPPED (STORIES) - PRELOAD E PAUSAR ====================
+// ==================== 8. WRAPPED (STORIES) ====================
 const stories = [
     { type: 'video', src: 'tela-wrapped/video1.webm', duration: 8500, caption: "amor da minha vida ❤️" },
     { type: 'image', src: 'tela-wrapped/IMG_20251009_142558_242.webp', duration: 5000, caption: "Momentos únicos...😻" },
@@ -245,6 +249,9 @@ function showStory(index) {
     
     clearTimeout(storyTimer); clearTimeout(animationDelayTimer); isPaused = false;
     currentIndex = index; const story = stories[index];
+
+    // Chamada do Lazy Load para o próximo item
+    preloadMedia(currentIndex);
 
     stories.forEach((_, i) => {
         const fill = document.getElementById(`progress-${i}`);
@@ -335,11 +342,8 @@ function prevStory() { showStory(currentIndex - 1); }
 
 
 // ==================== 9. SURPRESAS ESCONDIDAS (EASTER EGGS) ====================
-
-// Lógica para verificar se é dia 9
 function checkDay9Surprise() {
     const hoje = new Date();
-    // getDate() devolve o dia do mês (1 a 31)
     if (hoje.getDate() === 9) {
         const popup = document.getElementById('day9Popup');
         const card = document.getElementById('day9Card');
@@ -348,21 +352,18 @@ function checkDay9Surprise() {
             popup.classList.remove('hidden');
             popup.classList.add('flex');
             
-            // Pequeno delay para a animação de entrada ficar fluída
             setTimeout(() => {
                 popup.classList.remove('opacity-0');
                 popup.classList.add('opacity-100');
                 card.classList.remove('scale-95');
                 card.classList.add('scale-100');
                 
-                // Faz uma chuva de corações automaticamente!
                 loveExplosion(); 
             }, 100);
         }
     }
 }
 
-// Fechar o pop-up do dia 9
 function closeDay9Popup() {
     const popup = document.getElementById('day9Popup');
     const card = document.getElementById('day9Card');
@@ -376,11 +377,10 @@ function closeDay9Popup() {
         setTimeout(() => {
             popup.classList.add('hidden');
             popup.classList.remove('flex');
-        }, 500); // Aguarda a animação acabar para esconder
+        }, 500); 
     }
 }
 
-// Lógica do botão escondido "Juntos desde 2025" (Abre a carta secreta)
 function openSecretLetter() {
     const modal = document.getElementById('secretLetterModal');
     if(modal) {
@@ -389,7 +389,6 @@ function openSecretLetter() {
     }
 }
 
-// Fecha a carta secreta
 function closeSecretLetter() {
     const modal = document.getElementById('secretLetterModal');
     if(modal) {
@@ -398,3 +397,11 @@ function closeSecretLetter() {
     }
 }
 
+// ==================== 10. PWA - SERVICE WORKER ====================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registado!', reg.scope))
+        .catch(err => console.log('Erro no Service Worker:', err));
+    });
+}
