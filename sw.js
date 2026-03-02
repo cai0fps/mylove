@@ -1,19 +1,11 @@
-// Aumente o número da versão para forçar a atualização do cache
-const CACHE_NAME = 'mylove-cache-v5';
-
-// Arquivos locais cruciais para o funcionamento offline
-const localUrlsToCache = [
+const CACHE_NAME = 'mylove-cache-v6';
+const urlsToCache = [
     './',
     './index.html',
     './style.css',
     './script.js',
     './manifest.json',
-    // Adicionando a nova imagem ao cache local
-    './tela-inicial/nova.jpg' 
-];
-
-// Bibliotecas externas que precisam de tratamento especial
-const externalUrlsToCache = [
+    './tela-inicial/nova.jpg',
     'https://cdn.tailwindcss.com',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
@@ -23,16 +15,12 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                // Instalação síncrona dos arquivos locais cruciais
-                cache.addAll(localUrlsToCache);
-                
-                // Fetch de dependências externas ignorando bloqueio de CORS
-                // Isso resolve o erro de 'Failed to fetch' na instalação
+                // Utiliza fetch com no-cors para impedir que falhas em domínios externos quebrem a instalação
                 return Promise.all(
-                    externalUrlsToCache.map(url => {
-                        return fetch(new Request(url, { mode: 'no-cors' }))
+                    urlsToCache.map(url => {
+                        return fetch(new Request(url, { mode: url.startsWith('http') ? 'no-cors' : 'cors' }))
                             .then(response => cache.put(url, response))
-                            .catch(err => console.warn('Falha ao cachear URL externa (verifique conexão):', url));
+                            .catch(err => console.warn('Falha ao cachear URL:', url));
                     })
                 );
             })
@@ -45,9 +33,8 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
-                    // Limpa caches antigas para evitar conflitos
                     if (cache !== CACHE_NAME) {
-                        return caches.delete(cache);
+                        return caches.delete(cache); // Limpa cache velha
                     }
                 })
             );
@@ -56,16 +43,13 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // Evita cachear extensões do navegador ou esquemas não HTTP/HTTPS
     if (!event.request.url.startsWith('http')) return;
 
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // Devolve a versão em cache se existir, caso contrário busca na internet
                 return response || fetch(event.request).then(fetchRes => {
                     return caches.open(CACHE_NAME).then(cache => {
-                        // Guarda na cache os novos recursos que forem sendo carregados dinamicamente
                         if(event.request.method === 'GET') {
                             cache.put(event.request, fetchRes.clone());
                         }
@@ -73,7 +57,6 @@ self.addEventListener('fetch', event => {
                     });
                 });
             }).catch(() => {
-                // Proteção contra falha total de conexão
                 return new Response('Conteúdo offline não disponível.');
             })
     );
