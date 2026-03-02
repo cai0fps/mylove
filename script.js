@@ -30,6 +30,7 @@ const songs = [
     { title: "Nosso Amor", artist: "5km", src: "videoplayback2.webm" },
     { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" }
     { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" }
+    { title: "Que Sorte A Nossa", artist: "Tô querendo você", src: "videoplayback5.mp3" }
 ];
 
 let songIndex = 0; 
@@ -458,4 +459,5 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
 
