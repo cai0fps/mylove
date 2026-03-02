@@ -35,6 +35,17 @@ let songIndex = 0;
 loadSong(songs[songIndex]);
 audio.addEventListener('ended', nextSong);
 
+// BUG CORRIGIDO: Sincronização perfeita do botão play/pause usando eventos nativos
+audio.addEventListener('play', () => {
+    isPlaying = true;
+    if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
+});
+
+audio.addEventListener('pause', () => {
+    isPlaying = false;
+    if(playIcon) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); }
+});
+
 function loadSong(song) {
     audio.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
@@ -47,31 +58,22 @@ function prevSong() {
     songIndex--;
     if (songIndex < 0) songIndex = songs.length - 1; 
     loadSong(songs[songIndex]);
-    if (isPlaying) {
-        audio.play().catch(e => console.error("Erro ao reproduzir:", e));
-    }
+    if (isPlaying) audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
 function nextSong() {
     songIndex++;
     if (songIndex > songs.length - 1) songIndex = 0; 
     loadSong(songs[songIndex]);
-    if (isPlaying) {
-        audio.play().catch(e => console.error("Erro ao reproduzir:", e));
-    }
+    if (isPlaying) audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
 function togglePlay() {
     if (!audio) return;
-    if (isPlaying) {
-        audio.pause();
-        if(playIcon) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); }
-        isPlaying = false;
+    if (audio.paused) {
+        audio.play().catch(e => console.error("Erro ao reproduzir áudio:", e));
     } else {
-        audio.play().then(() => {
-            if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
-            isPlaying = true;
-        }).catch(e => console.error("Erro ao reproduzir áudio:", e));
+        audio.pause();
     }
 }
 
@@ -79,8 +81,11 @@ function togglePlay() {
 audio.addEventListener('timeupdate', () => {
     const current = audio.currentTime;
     const duration = audio.duration;
+    
     if(currentTimeEl) currentTimeEl.innerText = formatTime(current);
-    if (!isNaN(duration) && duration > 0) {
+    
+    // Evita bug do Infinity em arquivos WebM
+    if (!isNaN(duration) && isFinite(duration) && duration > 0) {
         if(totalDurationEl) totalDurationEl.innerText = formatTime(duration);
         const percent = (current / duration) * 100;
         if(progressBar) progressBar.style.width = `${percent}%`;
@@ -88,20 +93,24 @@ audio.addEventListener('timeupdate', () => {
 });
 
 audio.addEventListener('loadedmetadata', () => {
-    if(totalDurationEl && !isNaN(audio.duration)) totalDurationEl.innerText = formatTime(audio.duration);
+    if(totalDurationEl && !isNaN(audio.duration) && isFinite(audio.duration)) {
+        totalDurationEl.innerText = formatTime(audio.duration);
+    }
 });
 
-// BUG CORRIGIDO: Barra de progresso saltava se o clique não fosse exato
 function seek(event) {
     const rect = progressBarContainer.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const width = rect.width;
     const duration = audio.duration;
-    if(!isNaN(duration) && duration > 0) audio.currentTime = (clickX / width) * duration;
+    if(!isNaN(duration) && isFinite(duration) && duration > 0) {
+        audio.currentTime = (clickX / width) * duration;
+    }
 }
 
+// BUG CORRIGIDO: Tratamento de valores infinitos (NaN/Infinity)
 function formatTime(seconds) {
-    if (isNaN(seconds)) return "0:00";
+    if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
@@ -111,13 +120,7 @@ function formatTime(seconds) {
 if (startBtn && overlay) {
     startBtn.addEventListener('click', () => {
         if (audio) {
-            audio.play().then(() => {
-                isPlaying = true;
-                if(playIcon) {
-                    playIcon.classList.remove('fa-play');
-                    playIcon.classList.add('fa-pause');
-                }
-            }).catch(e => console.log("Áudio bloqueado pelo browser:", e));
+            audio.play().catch(e => console.log("Áudio bloqueado pelo browser:", e));
         }
         overlay.style.display = 'none';
         
@@ -141,7 +144,6 @@ function preloadMedia(index) {
 }
 
 // ==================== 5. MENSAGEM ====================
-// BUG CORRIGIDO: Melhor gestão de eventos e estilos para funcionar no telemóvel
 function toggleMessage(btn) {
     const container = document.getElementById('messageContainer');
     if (container.classList.contains('h-40')) {
