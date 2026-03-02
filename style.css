@@ -60,7 +60,6 @@ body {
     height: 100%;
     width: 0%;
     background: white;
-    /* A transição é controlada via JavaScript */
 }
 
 /* Utilitários de Animação */
@@ -72,9 +71,9 @@ body {
 .heart-bg {
     position: fixed;
     bottom: -10vh;
-    color: #ff4757; /* Vermelho/Rosa vibrante */
+    color: #ff4757; 
     font-size: 25px;
-    z-index: 0; /* Fica no fundo */
+    z-index: 0; 
     animation: floatUp linear forwards;
     pointer-events: none;
     text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
@@ -87,3 +86,10 @@ body {
     100% { transform: translateY(-120vh) rotate(360deg) scale(1.2); opacity: 0; }
 }
 
+/* Previne o menu de contexto ao segurar o ecrã no telemóvel */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    outline: none;
+}
