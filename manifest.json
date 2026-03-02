@@ -1,0 +1,20 @@
+{
+  "name": "Love Track & Wrapped",
+  "short_name": "MyLove",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff4757",
+  "icons": [
+    {
+      "src": "tela-inicial/1.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "tela-inicial/1.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
