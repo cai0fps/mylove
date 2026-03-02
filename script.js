@@ -35,7 +35,6 @@ let songIndex = 0;
 loadSong(songs[songIndex]);
 audio.addEventListener('ended', nextSong);
 
-// BUG CORRIGIDO: Sincronização perfeita do botão play/pause usando eventos nativos
 audio.addEventListener('play', () => {
     isPlaying = true;
     if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
@@ -84,7 +83,6 @@ audio.addEventListener('timeupdate', () => {
     
     if(currentTimeEl) currentTimeEl.innerText = formatTime(current);
     
-    // Evita bug do Infinity em arquivos WebM
     if (!isNaN(duration) && isFinite(duration) && duration > 0) {
         if(totalDurationEl) totalDurationEl.innerText = formatTime(duration);
         const percent = (current / duration) * 100;
@@ -108,7 +106,6 @@ function seek(event) {
     }
 }
 
-// BUG CORRIGIDO: Tratamento de valores infinitos (NaN/Infinity)
 function formatTime(seconds) {
     if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
     const min = Math.floor(seconds / 60);
@@ -144,16 +141,17 @@ function preloadMedia(index) {
 }
 
 // ==================== 5. MENSAGEM ====================
+// Atualizado para expandir/recolher suavemente usando max-height
 function toggleMessage(btn) {
     const container = document.getElementById('messageContainer');
-    if (container.classList.contains('h-40')) {
+    if (container.classList.contains('max-h-40')) {
         btn.innerText = "Recolher"; 
-        container.classList.remove('h-40');
-        container.classList.add('h-auto');
+        container.classList.remove('max-h-40');
+        container.classList.add('max-h-[1000px]');
     } else {
         btn.innerText = "Ler tudo"; 
-        container.classList.remove('h-auto');
-        container.classList.add('h-40');
+        container.classList.remove('max-h-[1000px]');
+        container.classList.add('max-h-40');
     }
 }
 
@@ -184,10 +182,14 @@ updateCounter();
 
 // ==================== 7. CHUVA DE CORAÇÕES ====================
 let heartInterval;
+let heartTimeout; 
 
 function loveExplosion() {
+    clearInterval(heartInterval);
+    clearTimeout(heartTimeout);
+
     heartInterval = setInterval(createHeart, 100);
-    setTimeout(() => { clearInterval(heartInterval); }, 4000);
+    heartTimeout = setTimeout(() => { clearInterval(heartInterval); }, 4000);
 }
 
 function createHeart() {
@@ -223,6 +225,7 @@ let storyStartTime = 0;
 let storyRemainingTime = 0;
 let holdTimer; 
 let isHolding = false;
+let videoPlayPromise; 
 
 function startWrapped() {
     mainScreen.style.display = 'none'; 
@@ -238,7 +241,13 @@ function closeWrapped() {
     clearTimeout(storyTimer);
     clearTimeout(animationDelayTimer); 
     isPaused = false;
-    if(storyVideo) { storyVideo.pause(); storyVideo.src = ""; }
+    if(storyVideo) { 
+        if (videoPlayPromise !== undefined) {
+            videoPlayPromise.then(() => { storyVideo.pause(); storyVideo.src = ""; }).catch(() => {});
+        } else {
+            storyVideo.pause(); storyVideo.src = "";
+        }
+    }
     wrappedScreen.classList.add('hidden');
     wrappedScreen.classList.remove('flex');
     mainScreen.style.display = 'flex'; 
@@ -269,13 +278,24 @@ function showStory(index) {
     });
 
     if (story.type === 'image') {
-        storyVideo.classList.add('hidden'); storyVideo.pause();
+        storyVideo.classList.add('hidden'); 
+        if (videoPlayPromise !== undefined) {
+            videoPlayPromise.then(() => storyVideo.pause()).catch(() => {});
+        } else {
+            storyVideo.pause();
+        }
         storyImage.classList.remove('hidden'); storyImage.src = story.src;
         animateBar(story.duration);
     } else {
         storyImage.classList.add('hidden'); storyVideo.classList.remove('hidden');
         storyVideo.src = story.src; storyVideo.currentTime = 0;
-        storyVideo.play().catch(e => console.log("Erro vídeo:", e));
+        
+        videoPlayPromise = storyVideo.play();
+        if (videoPlayPromise !== undefined) {
+            videoPlayPromise.catch(e => {
+                if(e.name !== 'AbortError') console.log("Erro vídeo:", e);
+            });
+        }
         animateBar(story.duration);
     }
     if(captionText) captionText.innerText = story.caption;
@@ -299,7 +319,15 @@ function pauseStory() {
     isPaused = true;
     clearTimeout(storyTimer); clearTimeout(animationDelayTimer);
     storyRemainingTime -= (Date.now() - storyStartTime);
-    if (stories[currentIndex].type === 'video' && !storyVideo.paused) storyVideo.pause();
+    
+    if (stories[currentIndex].type === 'video' && !storyVideo.paused) {
+        if (videoPlayPromise !== undefined) {
+            videoPlayPromise.then(() => storyVideo.pause()).catch(() => {});
+        } else {
+            storyVideo.pause();
+        }
+    }
+    
     const fill = document.getElementById(`progress-${currentIndex}`);
     if (fill) {
         const computedWidth = window.getComputedStyle(fill).width;
@@ -310,7 +338,16 @@ function pauseStory() {
 function resumeStory() {
     if(!isPaused) return;
     isPaused = false;
-    if (stories[currentIndex].type === 'video') storyVideo.play().catch(e => console.log(e));
+    
+    if (stories[currentIndex].type === 'video') {
+        videoPlayPromise = storyVideo.play();
+        if (videoPlayPromise !== undefined) {
+            videoPlayPromise.catch(e => {
+                if(e.name !== 'AbortError') console.log("Erro vídeo resume:", e);
+            });
+        }
+    }
+    
     const fill = document.getElementById(`progress-${currentIndex}`);
     if (fill) {
         fill.style.transition = `width ${storyRemainingTime}ms linear`; fill.style.width = '100%';
@@ -415,4 +452,3 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
-
