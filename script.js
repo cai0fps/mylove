@@ -26,11 +26,15 @@ let storyTimer;
 
 // ==================== 2. PLAYLIST E ÁUDIO ====================
 const songs = [
+    { title: "Amor Meu Grande Amor", artist: "Grande Amor", src: "videoplayback7.mp3" },
     { title: "Sonha Comigo", artist: "Nossa Música", src: "videoplayback.weba" },
     { title: "Nosso Amor", artist: "5km", src: "videoplayback2.webm" },
-    { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" }
-    { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" }
-    { title: "Que Sorte A Nossa", artist: "Tô querendo você", src: "videoplayback5.mp3" }
+    { title: "Eu vejo você longe", artist: "E quero você perto", src: "videoplayback8.mp3" },
+    { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" },
+    { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" },
+    { title: "Que Sorte A Nossa", artist: "Tô querendo você", src: "videoplayback5.mp3" },
+    { title: "Pra Sempre Com Você", artist: "Pra Sempre", src: "videoplayback6.mp3" },
+
 ];
 
 let songIndex = 0; 
@@ -459,5 +463,6 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
 
 
