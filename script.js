@@ -415,3 +415,4 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
