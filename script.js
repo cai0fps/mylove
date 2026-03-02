@@ -29,6 +29,7 @@ const songs = [
     { title: "Amor Meu Grande Amor", artist: "Grande Amor", src: "videoplayback7.mp3" },
     { title: "Sonha Comigo", artist: "Nossa Música", src: "videoplayback.weba" },
     { title: "Nosso Amor", artist: "5km", src: "videoplayback2.webm" },
+    { title: "Eu vou te ser sincero", artist: "Quero te ver de branco", src: "videoplayback9.mp3" },
     { title: "Eu vejo você longe", artist: "E quero você perto", src: "videoplayback8.mp3" },
     { title: "Para Sempre", artist: "duas metades", src: "videoplayback3.webm" },
     { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" },
@@ -463,6 +464,7 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
 
 
 
