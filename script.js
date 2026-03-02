@@ -37,12 +37,18 @@ audio.addEventListener('ended', nextSong);
 
 audio.addEventListener('play', () => {
     isPlaying = true;
-    if(playIcon) { playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); }
+    if(playIcon) { 
+        playIcon.classList.remove('fa-play', 'ml-1'); 
+        playIcon.classList.add('fa-pause'); 
+    }
 });
 
 audio.addEventListener('pause', () => {
     isPlaying = false;
-    if(playIcon) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); }
+    if(playIcon) { 
+        playIcon.classList.remove('fa-pause'); 
+        playIcon.classList.add('fa-play', 'ml-1'); 
+    }
 });
 
 function loadSong(song) {
@@ -141,7 +147,6 @@ function preloadMedia(index) {
 }
 
 // ==================== 5. MENSAGEM ====================
-// Atualizado para expandir/recolher suavemente usando max-height
 function toggleMessage(btn) {
     const container = document.getElementById('messageContainer');
     if (container.classList.contains('max-h-40')) {
