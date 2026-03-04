@@ -71,7 +71,6 @@ function prevSong() {
     if (songIndex < 0) songIndex = songs.length - 1; 
     loadSong(songs[songIndex]);
     
-    // Ajuste: Removemos a condição "if (isPlaying)" para a música tocar sempre
     audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
@@ -80,8 +79,6 @@ function nextSong() {
     if (songIndex > songs.length - 1) songIndex = 0; 
     loadSong(songs[songIndex]);
     
-    // Ajuste: Removemos a condição "if (isPlaying)" para a música tocar sempre 
-    // e passar para a próxima automaticamente quando o evento 'ended' for disparado
     audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
@@ -138,7 +135,12 @@ if (startBtn && overlay) {
         if (audio) {
             audio.play().catch(e => console.log("Áudio bloqueado pelo browser:", e));
         }
-        overlay.style.display = 'none';
+        
+        // Esconde o overlay suavemente
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 1000);
         
         preloadMedia(0); 
     });
@@ -415,21 +417,18 @@ function checkDay9Surprise() {
         const popup = document.getElementById('day9Popup');
         const card = document.getElementById('day9Card');
         
-        // Altera o título da tela de entrada
         const overlayTitle = document.getElementById('overlayTitle');
         if (overlayTitle) overlayTitle.innerText = "Feliz nosso dia! 🥹❤️";
 
-        // Aplica um tom romântico e escuro ao fundo do site durante todo o dia 9
-        document.body.style.background = "linear-gradient(135deg, #3a001e 0%, #000000 100%)";
+        // Aplica tom vermelho por cima do fundo global
+        document.body.insertAdjacentHTML('beforeend', '<div class="fixed inset-0 z-[-1] bg-red-900/40 pointer-events-none mix-blend-overlay"></div>');
 
-        // Adiciona corações caindo de forma esporádica (1 a cada 3 segundos)
         setInterval(() => {
             if (document.visibilityState === 'visible') {
                 createHeart();
             }
         }, 3000);
         
-        // Lógica do Popup
         if(popup && card) {
             popup.classList.remove('hidden');
             popup.classList.add('flex');
@@ -443,9 +442,6 @@ function checkDay9Surprise() {
                 loveExplosion(); 
             }, 100);
         }
-    } else {
-        // Garante que nos outros dias o fundo seja o padrão
-        document.body.style.background = ""; 
     }
 }
 
@@ -493,7 +489,6 @@ if ('serviceWorker' in navigator) {
                 const newWorker = reg.installing;
                 newWorker.addEventListener('statechange', () => {
                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        // Estratégia suave: Exibe notificação em vez de recarregar bruscamente
                         const updateToast = document.getElementById('updateToast');
                         if (updateToast) {
                             updateToast.classList.remove('hidden');
