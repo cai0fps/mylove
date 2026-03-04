@@ -133,6 +133,7 @@ function formatTime(seconds) {
 
 // ==================== 4. TELA DE ENTRADA E PRELOAD (LAZY LOAD) ====================
 if (startBtn && overlay) {
+    checkDay9Surprise(); // Verifica a data logo ao carregar a página
     startBtn.addEventListener('click', () => {
         if (audio) {
             audio.play().catch(e => console.log("Áudio bloqueado pelo browser:", e));
@@ -140,7 +141,6 @@ if (startBtn && overlay) {
         overlay.style.display = 'none';
         
         preloadMedia(0); 
-        checkDay9Surprise();
     });
 }
 
@@ -408,13 +408,28 @@ function nextStory() { showStory(currentIndex + 1); }
 function prevStory() { showStory(currentIndex - 1); }
 
 
-// ==================== 9. SURPRESAS ESCONDIDAS (EASTER EGGS) ====================
+// ==================== 9. SURPRESAS ESCONDIDAS E TEMA DIA 9 ====================
 function checkDay9Surprise() {
     const hoje = new Date();
     if (hoje.getDate() === 9) {
         const popup = document.getElementById('day9Popup');
         const card = document.getElementById('day9Card');
         
+        // Altera o título da tela de entrada
+        const overlayTitle = document.getElementById('overlayTitle');
+        if (overlayTitle) overlayTitle.innerText = "Feliz nosso dia! 🥹❤️";
+
+        // Aplica um tom romântico e escuro ao fundo do site durante todo o dia 9
+        document.body.style.background = "linear-gradient(135deg, #3a001e 0%, #000000 100%)";
+
+        // Adiciona corações caindo de forma esporádica (1 a cada 3 segundos)
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                createHeart();
+            }
+        }, 3000);
+        
+        // Lógica do Popup
         if(popup && card) {
             popup.classList.remove('hidden');
             popup.classList.add('flex');
@@ -428,6 +443,9 @@ function checkDay9Surprise() {
                 loveExplosion(); 
             }, 100);
         }
+    } else {
+        // Garante que nos outros dias o fundo seja o padrão
+        document.body.style.background = ""; 
     }
 }
 
