@@ -18,16 +18,38 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
 </head>
 <body class="min-h-[100dvh] pb-10 text-white overflow-x-hidden transition-colors duration-1000">
 
-    <div id="overlay" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center transition-opacity duration-700">
-        <div class="text-center animate-pulse">
-            <i class="fas fa-heart text-red-500 text-4xl mb-4"></i>
-            <h1 id="overlayTitle" class="text-2xl font-bold mb-2">Para meu nenem</h1>
-            <p class="text-gray-400 mb-6 text-sm">Toque para entrar</p>
+    <!-- Fundo Global Escurecido com Desfoque (Liquid Glass Base) -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <img src="tela-inicial/nova.jpg" alt="Background" class="w-full h-full object-cover scale-110 blur-2xl opacity-40">
+        <div class="absolute inset-0 bg-black/60"></div>
+    </div>
+
+    <!-- TELA DE ENTRADA -->
+    <div id="overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-all duration-1000 overflow-hidden bg-black/40 backdrop-blur-sm">
+        <div class="relative z-10 text-center animate-float p-10 md:p-14 rounded-[2.5rem] bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(255,105,180,0.15)] max-w-[85%] w-full mx-auto">
+            <div class="relative inline-block mb-4">
+                <div class="absolute inset-0 bg-red-500 blur-xl opacity-50 rounded-full animate-pulse"></div>
+                <i class="fas fa-heart text-red-500 text-5xl relative z-10 drop-shadow-lg"></i>
+            </div>
             
-            <button id="startSiteBtn" class="bg-white/10 border border-white/20 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/20 transition-all cursor-pointer">
+            <h1 id="overlayTitle" class="text-3xl font-bold mb-2 text-white drop-shadow-md tracking-wide">Para meu nenem</h1>
+            <p class="text-gray-300 mb-8 text-xs tracking-[0.2em] uppercase opacity-80">Toque para entrar</p>
+            
+            <button id="startSiteBtn" class="bg-white/20 border border-white/30 text-white px-10 py-4 rounded-full font-bold hover:bg-white/30 hover:scale-105 transition-all duration-300 cursor-pointer shadow-[0_4px_15px_rgba(0,0,0,0.2)] backdrop-blur-md">
                 Entrar ❤️
             </button>
         </div>
@@ -37,8 +59,9 @@
 
     <div id="mainScreen" class="max-w-md mx-auto p-4 flex flex-col gap-6 relative z-10">
         
-        <div class="flex flex-col gap-4 p-4 rounded-2xl glass-card">
-            <div class="w-full aspect-square relative rounded-lg overflow-hidden shadow-2xl">
+        <!-- Leitor de Música (Glass Card) -->
+        <div class="flex flex-col gap-4 p-5 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+            <div class="w-full aspect-square relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                 <img src="tela-inicial/nova.jpg" alt="Capa do Álbum" class="w-full h-full object-cover">
             </div>
             
@@ -48,60 +71,64 @@
                         <h1 id="songTitle" class="text-2xl font-bold text-white drop-shadow-md">Sonha Comigo</h1>
                         <i class="fas fa-check-circle text-blue-400 text-lg"></i>
                     </div>
-                    <p id="songArtist" class="text-gray-200 text-sm">Nossa Música</p>
+                    <p id="songArtist" class="text-gray-300 text-sm">Nossa Música</p>
                 </div>
                 
-                <i onclick="loveExplosion()" class="fas fa-heart text-2xl text-green-400 cursor-pointer drop-shadow-sm hover:scale-125 transition-transform active:scale-90"></i>
+                <i onclick="loveExplosion()" class="fas fa-heart text-2xl text-pink-500 cursor-pointer drop-shadow-sm hover:scale-125 transition-transform active:scale-90"></i>
             </div>
             
-            <div class="w-full group">
-                <div id="progressBarContainer" class="w-full bg-gray-600/50 h-1 rounded-full overflow-hidden mt-2 group-hover:h-1.5 transition-all cursor-pointer" onclick="seek(event)">
+            <div class="w-full group mt-1">
+                <div id="progressBarContainer" class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden group-hover:h-2 transition-all cursor-pointer border border-white/5" onclick="seek(event)">
                     <div id="progressBar" class="bg-white h-full w-0 rounded-full relative shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
                 </div>
-                <div class="flex justify-between text-xs text-gray-200 mt-1 font-mono">
+                <div class="flex justify-between text-xs text-gray-300 mt-2 font-mono opacity-80">
                     <span id="currentTime">0:00</span><span id="totalDuration">0:00</span>
                 </div>
             </div>
 
-            <div class="flex justify-between items-center px-2">
-                <i class="fas fa-random text-gray-300 text-lg hover:text-white transition"></i>
-                <i onclick="prevSong()" class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
+            <div class="flex justify-between items-center px-4 mt-2">
+                <i class="fas fa-random text-gray-400 text-lg hover:text-white transition"></i>
+                <i onclick="prevSong()" class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
                 
-                <button onclick="togglePlay()" aria-label="Reproduzir" class="w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border-none shadow-xl hover:shadow-2xl hover:shadow-white/20">
+                <button onclick="togglePlay()" aria-label="Reproduzir" class="w-16 h-16 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                     <i id="playIcon" class="fas fa-play text-black text-2xl ml-1"></i>
                 </button>
 
-                <i onclick="nextSong()" class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition"></i>
-                <i class="fas fa-redo text-green-400 text-lg hover:text-green-300 transition"></i>
+                <i onclick="nextSong()" class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
+                <i class="fas fa-redo text-gray-400 text-lg hover:text-white transition"></i>
             </div>
         </div>
 
-        <div class="rounded-xl p-4 mt-2 glass-card">
-            <div class="relative w-full h-48 rounded-lg overflow-hidden mb-4 shadow-lg">
+        <!-- Contador (Glass Card) -->
+        <div class="rounded-3xl p-5 mt-2 bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+            <div class="relative w-full h-48 rounded-2xl overflow-hidden mb-5 shadow-lg border border-white/10">
                 <img src="tela-inicial/sobre_casal.jpg" alt="Foto do Casal" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
-                <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 flex flex-col justify-end">
-                    <p class="text-white font-bold text-lg drop-shadow-md">Sobre nós</p>
+                <div class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
+                    <p class="text-white font-bold text-xl drop-shadow-md">Sobre nós</p>
                 </div>
             </div>
             
-            <h2 class="text-xl font-bold mb-1 drop-shadow-sm">Neves e Anderson</h2>
+            <h2 class="text-2xl font-bold mb-1 drop-shadow-sm text-white">Neves e Anderson</h2>
             
-            <p class="text-gray-300 text-sm mb-4">
-                <span onclick="openSecretLetter()" class="cursor-pointer hover:text-white transition-colors duration-300" title="Há aqui um segredo...">Juntos desde 2025</span>
+            <p class="text-gray-300 text-sm mb-5">
+                <span onclick="openSecretLetter()" class="cursor-pointer hover:text-pink-400 transition-colors duration-300 border-b border-dashed border-gray-400 hover:border-pink-400" title="Há aqui um segredo...">Juntos desde 2025</span>
             </p>
             
-            <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="years" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Anos</span></div>
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="months" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Meses</span></div>
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="days" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Dias</span></div>
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="hours" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Horas</span></div>
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="minutes" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Min</span></div>
-                <div class="bg-black/40 p-3 rounded-lg backdrop-blur-sm"><span id="seconds" class="block text-2xl font-bold text-white">0</span><span class="text-xs text-gray-400 uppercase">Seg</span></div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="years" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Anos</span></div>
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="months" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Meses</span></div>
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="days" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Dias</span></div>
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="hours" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Horas</span></div>
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="minutes" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Min</span></div>
+                <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="seconds" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Seg</span></div>
             </div>
         </div>
 
-        <div class="rounded-xl p-5 text-black relative overflow-hidden shadow-lg" style="background: linear-gradient(135deg, #67dceb 0%, #4facfe 100%);">
-            <h3 class="font-bold text-lg mb-3 opacity-90 text-white drop-shadow-md">Mensagem especial</h3>
+        <!-- Mensagem Especial (Blue Gradient) -->
+        <div class="rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20" style="background: linear-gradient(135deg, #67dceb 0%, #4facfe 100%);">
+            <h3 class="font-bold text-lg mb-3 text-white drop-shadow-md flex items-center gap-2">
+                <i class="fas fa-envelope-open text-white"></i> Mensagem especial
+            </h3>
             <div id="messageContainer" class="max-h-40 overflow-hidden pr-2 transition-all duration-700 ease-in-out">
                 <p class="text-xl font-bold leading-relaxed text-white drop-shadow-sm">
                     Você é o amor da minha vida e a pessoa que me faz querer ser melhor a cada novo dia 🥹💖.<br><br>
@@ -110,21 +137,24 @@
                     Meu bem, eu amo você mais do que qualquer palavra pode expressar!🌍
                 </p>
             </div>
-            <button onclick="toggleMessage(this)" class="mt-4 bg-white/20 hover:bg-white/30 text-white border border-white/40 px-4 py-2 rounded-full text-sm font-semibold transition-colors backdrop-blur-md shadow-sm">Ler tudo</button>
+            <button onclick="toggleMessage(this)" class="mt-5 bg-white/20 hover:bg-white/30 text-white border border-white/40 px-5 py-2 rounded-full text-sm font-semibold transition-colors backdrop-blur-md shadow-sm">Ler tudo</button>
         </div>
 
-        <div class="relative rounded-xl overflow-hidden h-48 flex flex-col justify-end p-4 shadow-2xl border border-white/10 glass-card">
-            <div class="absolute inset-0 bg-black z-0">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-600 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 animate-pulse"></div>
-                <div class="absolute bottom-0 left-0 w-64 h-64 bg-red-600 rounded-full blur-3xl opacity-60 translate-y-1/4 -translate-x-1/4 animate-pulse delay-1s"></div>
+        <!-- Wrapped Card (Glass Card) -->
+        <div class="relative rounded-3xl overflow-hidden h-52 flex flex-col justify-end p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 bg-white/5 backdrop-blur-xl mt-2 mb-4">
+            <div class="absolute inset-0 z-0 overflow-hidden rounded-3xl">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-600 rounded-full blur-[80px] opacity-40 -translate-y-1/2 translate-x-1/4 animate-pulse"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 rounded-full blur-[80px] opacity-40 translate-y-1/4 -translate-x-1/4 animate-pulse delay-1s"></div>
             </div>
             <div class="relative z-10">
-                <h2 class="text-3xl font-bold leading-tight mb-2 drop-shadow-lg"><br>Wrapped</h2>
-                <button onclick="startWrapped()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg cursor-pointer">Vamos lá</button>
+                <p class="text-pink-300 text-sm font-bold tracking-widest uppercase mb-1 drop-shadow-md">A nossa história</p>
+                <h2 class="text-4xl font-black leading-tight mb-4 text-white drop-shadow-lg">Wrapped</h2>
+                <button onclick="startWrapped()" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(255,255,255,0.3)] cursor-pointer">Vamos lá ✨</button>
             </div>
         </div>
     </div>
 
+    <!-- WRAPPED SCREEN -->
     <div id="wrappedScreen" class="fixed inset-0 z-50 bg-black hidden flex-col items-center justify-center">
         <div class="story-container relative w-full h-full max-w-md bg-black">
             <div class="absolute top-2 left-0 w-full px-2 flex gap-1 z-20" id="progressContainer"></div>
@@ -151,22 +181,24 @@
         </div>
     </div>
 
-    <div id="day9Popup" class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center px-4 transition-opacity duration-500 opacity-0">
-        <div class="bg-gradient-to-br from-pink-500 to-red-600 p-6 rounded-2xl text-center max-w-sm w-full shadow-2xl border border-white/20 transform scale-95 transition-transform duration-500" id="day9Card">
-            <i class="fas fa-calendar-check text-5xl text-white mb-4 animate-bounce"></i>
-            <h2 class="text-3xl font-bold text-white mb-2 drop-shadow-md">Feliz nosso dia! 🥹😍🎉</h2>
-            <p class="text-white/90 text-sm mb-6 leading-relaxed">Meu amor, hoje é o nosso dia especial! Mais um mês a celebrar. Amo-te muito minha nenem! ❤️</p>
-            <button onclick="closeDay9Popup()" class="bg-white text-red-600 font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-transform">Receber os beijinhos</button>
+    <!-- POPUP DIA 9 -->
+    <div id="day9Popup" class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-500 opacity-0">
+        <div class="bg-gradient-to-br from-pink-600/90 to-red-700/90 backdrop-blur-xl p-8 rounded-3xl text-center max-w-sm w-full shadow-[0_0_40px_rgba(255,0,100,0.3)] border border-white/30 transform scale-95 transition-transform duration-500" id="day9Card">
+            <i class="fas fa-calendar-check text-6xl text-white mb-5 animate-bounce drop-shadow-lg"></i>
+            <h2 class="text-3xl font-black text-white mb-3 drop-shadow-md">Feliz nosso dia! 🥹😍🎉</h2>
+            <p class="text-white/90 text-base mb-8 leading-relaxed font-medium">Meu amor, hoje é o nosso dia especial! Mais um mês a celebrar. Amo-te muito minha nenem! ❤️</p>
+            <button onclick="closeDay9Popup()" class="bg-white text-red-600 font-bold py-4 px-8 rounded-full shadow-xl hover:scale-105 transition-transform w-full">Receber os beijinhos</button>
         </div>
     </div>
 
-    <div id="secretLetterModal" class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
-        <div class="bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] bg-[#fdfbf7] p-8 rounded-xl max-w-sm w-full shadow-2xl relative border border-gray-200">
-            <button onclick="closeSecretLetter()" class="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-xl transition-colors"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
+    <!-- CARTA SECRETA -->
+    <div id="secretLetterModal" class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
+        <div class="bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] bg-[#fdfbf7] p-8 rounded-2xl max-w-sm w-full shadow-2xl relative border border-gray-300">
+            <button onclick="closeSecretLetter()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl transition-colors"><i class="fas fa-times"></i></button>
+            <h2 class="text-xl font-bold text-pink-600 mb-5 flex items-center gap-2">
                 <i class="fas fa-envelope-open-text"></i> Segredo Desbloqueado
             </h2>
-            <p class="text-gray-800 leading-relaxed font-serif text-sm italic">
+            <p class="text-gray-800 leading-relaxed font-serif text-base italic">
                 💖<br><br>
                 Queria apenas deixar registado aqui, que és a pessoa mais incrível que já conheci. Obrigado por cada sorriso, cada abraço e por tornares a minha vida muito mais colorida.<br><br>
                 te amo nenem.
@@ -174,6 +206,7 @@
         </div>
     </div>
 
+    <!-- TOAST ATUALIZAÇÃO -->
     <div id="updateToast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] bg-white text-pink-600 px-6 py-3 rounded-full font-bold shadow-2xl border border-pink-200 hidden cursor-pointer hover:scale-105 transition-transform text-sm text-center w-[90%] max-w-xs">
         ✨ Nova surpresa adicionada!<br><span class="text-xs text-gray-600">Toque aqui para atualizar</span>
     </div>
