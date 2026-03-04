@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v9'; // Atualizado para forçar o novo cache
+const CACHE_NAME = 'mylove-cache-v13'; // Atualizado para v13 para forçar limpeza de cache e aplicar o gradiente azul
 const urlsToCache = [
     './',
     './index.html',
@@ -15,7 +15,6 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                // Utiliza fetch com no-cors para impedir que falhas em domínios externos quebrem a instalação
                 return Promise.all(
                     urlsToCache.map(url => {
                         return fetch(new Request(url, { mode: url.startsWith('http') ? 'no-cors' : 'cors' }))
@@ -34,7 +33,7 @@ self.addEventListener('activate', event => {
             return Promise.all(
                 cacheNames.map(cache => {
                     if (cache !== CACHE_NAME) {
-                        return caches.delete(cache); // Limpa cache velha
+                        return caches.delete(cache);
                     }
                 })
             );
