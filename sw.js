@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v16'; // Versão atualizada para forçar limpeza e renovar regras
+const CACHE_NAME = 'mylove-cache-v17'; // Versão atualizada para forçar limpeza e renovar regras
 const urlsToCache = [
     './',
     './index.html',
