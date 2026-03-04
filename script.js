@@ -464,7 +464,7 @@ function closeSecretLetter() {
     }
 }
 
-// ==================== 10. PWA - SERVICE WORKER ====================
+// ==================== 10. PWA - SERVICE WORKER E ATUALIZAÇÃO ====================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
@@ -475,20 +475,18 @@ if ('serviceWorker' in navigator) {
                 const newWorker = reg.installing;
                 newWorker.addEventListener('statechange', () => {
                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        console.log('Nova atualização do PWA instalada e pronta.');
+                        // Estratégia suave: Exibe notificação em vez de recarregar bruscamente
+                        const updateToast = document.getElementById('updateToast');
+                        if (updateToast) {
+                            updateToast.classList.remove('hidden');
+                            updateToast.addEventListener('click', () => {
+                                window.location.reload();
+                            });
+                        }
                     }
                 });
             });
         })
         .catch(err => console.log('Erro no Service Worker:', err));
-
-        // Força a página a recarregar e buscar os arquivos novos assim que o SW atualizar
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!refreshing) {
-                window.location.reload();
-                refreshing = true;
-            }
-        });
     });
 }
