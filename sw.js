@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v8'; // Atualizado para forçar o novo cache
+const CACHE_NAME = 'mylove-cache-v9'; // Atualizado para forçar o novo cache
 const urlsToCache = [
     './',
     './index.html',
