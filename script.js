@@ -468,14 +468,27 @@ function closeSecretLetter() {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker Registado!', reg.scope))
+        .then(reg => {
+            console.log('Service Worker Registrado!', reg.scope);
+            
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('Nova atualização do PWA instalada e pronta.');
+                    }
+                });
+            });
+        })
         .catch(err => console.log('Erro no Service Worker:', err));
+
+        // Força a página a recarregar e buscar os arquivos novos assim que o SW atualizar
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                window.location.reload();
+                refreshing = true;
+            }
+        });
     });
 }
-
-
-
-
-
-
-
