@@ -7,7 +7,13 @@ body {
     background: linear-gradient(-45deg, #4A00E0, #8E2DE2, #00C9FF, #92FE9D); 
     background-size: 400% 400%; 
     animation: gradientBG 10s ease infinite;
+    min-height: 100vh; /* Fallback de compatibilidade */
     min-height: 100dvh;
+}
+
+/* Fallback de Efeito Vidro para iOS/Safari */
+* {
+    -webkit-backdrop-filter: inherit;
 }
 
 @keyframes gradientBG {
