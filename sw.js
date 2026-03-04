@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v13'; // Atualizado para v13 para forçar limpeza de cache e aplicar o gradiente azul
+const CACHE_NAME = 'mylove-cache-v14'; // Atualizado para v13 para forçar limpeza de cache e aplicar o gradiente azul
 const urlsToCache = [
     './',
     './index.html',
