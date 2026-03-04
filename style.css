@@ -1,17 +1,30 @@
+/* Correção definitiva para altura em WebViews (iOS/Android) */
+html, body {
+    height: 100%;
+    margin: 0; padding: 0;
+}
+
+.custom-body-height {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    min-height: 100dvh;
+}
+
+html {
+    height: -webkit-fill-available;
+}
+
 body { 
     font-family: 'Inter', sans-serif; 
     color: white; 
-    margin: 0; padding: 0;
     
     /* Fundo Gradual Animado */
     background: linear-gradient(-45deg, #4A00E0, #8E2DE2, #00C9FF, #92FE9D); 
     background-size: 400% 400%; 
     animation: gradientBG 10s ease infinite;
-    min-height: 100vh; /* Fallback de compatibilidade */
-    min-height: 100dvh;
 }
 
-/* Fallback de Efeito Vidro para iOS/Safari */
+/* Fallback de Efeito Vidro para Safari e WebViews */
 * {
     -webkit-backdrop-filter: inherit;
 }
