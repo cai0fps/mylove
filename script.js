@@ -70,14 +70,19 @@ function prevSong() {
     songIndex--;
     if (songIndex < 0) songIndex = songs.length - 1; 
     loadSong(songs[songIndex]);
-    if (isPlaying) audio.play().catch(e => console.error("Erro ao reproduzir:", e));
+    
+    // Ajuste: Removemos a condição "if (isPlaying)" para a música tocar sempre
+    audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
 function nextSong() {
     songIndex++;
     if (songIndex > songs.length - 1) songIndex = 0; 
     loadSong(songs[songIndex]);
-    if (isPlaying) audio.play().catch(e => console.error("Erro ao reproduzir:", e));
+    
+    // Ajuste: Removemos a condição "if (isPlaying)" para a música tocar sempre 
+    // e passar para a próxima automaticamente quando o evento 'ended' for disparado
+    audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
 function togglePlay() {
@@ -467,6 +472,7 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
+
 
 
 
