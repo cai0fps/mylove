@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v15'; 
+const CACHE_NAME = 'mylove-cache-v16'; // Versão atualizada para forçar limpeza e renovar regras
 const urlsToCache = [
     './',
     './index.html',
@@ -49,7 +49,9 @@ self.addEventListener('fetch', event => {
             .then(response => {
                 return response || fetch(event.request).then(fetchRes => {
                     return caches.open(CACHE_NAME).then(cache => {
-                        if(event.request.method === 'GET') {
+                        // Correção: Apenas faz cache se a resposta for completa (Status 200).
+                        // Ignora respostas parciais (Status 206) de áudios e vídeos.
+                        if (event.request.method === 'GET' && fetchRes.status === 200) {
                             cache.put(event.request, fetchRes.clone());
                         }
                         return fetchRes;
