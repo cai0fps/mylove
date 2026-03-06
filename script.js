@@ -13,6 +13,9 @@ const currentTimeEl = document.getElementById('currentTime');
 const totalDurationEl = document.getElementById('totalDuration');
 const progressBarContainer = document.getElementById('progressBarContainer');
 
+const shuffleBtn = document.getElementById('shuffleBtn');
+const repeatBtn = document.getElementById('repeatBtn');
+
 const wrappedScreen = document.getElementById('wrappedScreen');
 const mainScreen = document.getElementById('mainScreen');
 const storyImage = document.getElementById('storyImage');
@@ -23,6 +26,8 @@ const captionText = document.getElementById('captionText');
 let isPlaying = false;
 let currentIndex = 0; 
 let storyTimer;
+let isShuffle = false;
+let isRepeat = false;
 
 // ==================== 2. PLAYLIST E ÁUDIO ====================
 const songs = [
@@ -35,7 +40,6 @@ const songs = [
     { title: "Conto as horas para estar com você", artist: "Longe De Você", src: "videoplayback4.mp3" },
     { title: "Que Sorte A Nossa", artist: "Tô querendo você", src: "videoplayback5.mp3" },
     { title: "Pra Sempre Com Você", artist: "Pra Sempre", src: "videoplayback6.mp3" },
-
 ];
 
 let songIndex = 0; 
@@ -75,10 +79,19 @@ function prevSong() {
 }
 
 function nextSong() {
-    songIndex++;
-    if (songIndex > songs.length - 1) songIndex = 0; 
+    if (isShuffle) {
+        let newIndex = songIndex;
+        if (songs.length > 1) {
+            while (newIndex === songIndex) {
+                newIndex = Math.floor(Math.random() * songs.length);
+            }
+        }
+        songIndex = newIndex;
+    } else {
+        songIndex++;
+        if (songIndex > songs.length - 1) songIndex = 0; 
+    }
     loadSong(songs[songIndex]);
-    
     audio.play().catch(e => console.error("Erro ao reproduzir:", e));
 }
 
@@ -88,6 +101,33 @@ function togglePlay() {
         audio.play().catch(e => console.error("Erro ao reproduzir áudio:", e));
     } else {
         audio.pause();
+    }
+}
+
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    if (shuffleBtn) {
+        if (isShuffle) {
+            shuffleBtn.classList.remove('text-gray-400');
+            shuffleBtn.classList.add('text-pink-500');
+        } else {
+            shuffleBtn.classList.remove('text-pink-500');
+            shuffleBtn.classList.add('text-gray-400');
+        }
+    }
+}
+
+function toggleRepeat() {
+    isRepeat = !isRepeat;
+    audio.loop = isRepeat;
+    if (repeatBtn) {
+        if (isRepeat) {
+            repeatBtn.classList.remove('text-gray-400');
+            repeatBtn.classList.add('text-pink-500');
+        } else {
+            repeatBtn.classList.remove('text-pink-500');
+            repeatBtn.classList.add('text-gray-400');
+        }
     }
 }
 
@@ -130,13 +170,12 @@ function formatTime(seconds) {
 
 // ==================== 4. TELA DE ENTRADA E PRELOAD (LAZY LOAD) ====================
 if (startBtn && overlay) {
-    checkDay9Surprise(); // Verifica a data logo ao carregar a página
+    checkDay9Surprise(); 
     startBtn.addEventListener('click', () => {
         if (audio) {
             audio.play().catch(e => console.log("Áudio bloqueado pelo browser:", e));
         }
         
-        // Esconde o overlay suavemente
         overlay.style.opacity = '0';
         setTimeout(() => {
             overlay.style.display = 'none';
@@ -420,7 +459,6 @@ function checkDay9Surprise() {
         const overlayTitle = document.getElementById('overlayTitle');
         if (overlayTitle) overlayTitle.innerText = "Feliz nosso dia! 🥹❤️";
 
-        // Aplica tom vermelho por cima do fundo global
         document.body.insertAdjacentHTML('beforeend', '<div class="fixed inset-0 z-[-1] bg-red-900/40 pointer-events-none mix-blend-overlay"></div>');
 
         setInterval(() => {
