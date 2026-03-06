@@ -85,7 +85,7 @@
             </div>
 
             <div class="flex justify-between items-center px-4 mt-2">
-                <i class="fas fa-random text-gray-400 text-lg hover:text-white transition"></i>
+                <i id="shuffleBtn" onclick="toggleShuffle()" class="fas fa-random text-gray-400 text-lg hover:text-white transition cursor-pointer"></i>
                 <i onclick="prevSong()" class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
                 
                 <button onclick="togglePlay()" aria-label="Reproduzir" class="w-16 h-16 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
@@ -93,7 +93,7 @@
                 </button>
 
                 <i onclick="nextSong()" class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
-                <i class="fas fa-redo text-gray-400 text-lg hover:text-white transition"></i>
+                <i id="repeatBtn" onclick="toggleRepeat()" class="fas fa-redo text-gray-400 text-lg hover:text-white transition cursor-pointer"></i>
             </div>
         </div>
 
