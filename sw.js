@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-v4';
+const CACHE_NAME = 'mylove-cache-v18';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
