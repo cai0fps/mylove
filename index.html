@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    
+    <meta name="description" content="Nossa história, memórias e músicas.">
+    <meta property="og:title" content="MyLove - Nossa História">
+    <meta property="og:description" content="Uma retrospectiva de amor e memórias.">
+    <meta property="og:image" content="tela-inicial/nova.jpg">
+    <meta property="og:type" content="website">
+
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,105 +18,90 @@
     <title>Love Track & Wrapped</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="tela-inicial/nova.jpg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="tela-inicial/nova.jpg">
+    <link rel="apple-touch-icon" sizes="180x180" href="tela-inicial/nova.jpg">
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
     </style>
 </head>
-<body class="custom-body-height pb-10 text-white overflow-x-hidden transition-colors duration-1000">
+<body class="custom-body-height pb-10 text-white overflow-x-hidden bg-black transition-colors duration-1000">
 
     <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-        <img src="tela-inicial/nova.jpg" alt="Background" class="w-full h-full object-cover scale-110 blur-2xl opacity-40">
+        <img src="tela-inicial/nova.jpg" alt="Background" fetchpriority="high" class="w-full h-full object-cover scale-110 blur-2xl opacity-40">
         <div class="absolute inset-0 bg-black/60"></div>
     </div>
 
-    <div id="overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-all duration-1000 overflow-hidden bg-black/40 backdrop-blur-sm">
+    <div id="overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-1000 bg-black/40 backdrop-blur-sm">
         <div class="relative z-10 text-center animate-float p-10 md:p-14 rounded-[2.5rem] bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(255,105,180,0.15)] max-w-[85%] w-full mx-auto">
             <div class="relative inline-block mb-4">
-                <div class="absolute inset-0 bg-red-500 blur-xl opacity-50 rounded-full animate-pulse"></div>
+                <div class="absolute inset-0 bg-red-500 blur-xl opacity-50 rounded-full animate-pulse will-change-transform"></div>
                 <i class="fas fa-heart text-red-500 text-5xl relative z-10 drop-shadow-lg"></i>
             </div>
-            
             <h1 id="overlayTitle" class="text-3xl font-bold mb-2 text-white drop-shadow-md tracking-wide">Para meu nenem</h1>
             <p class="text-gray-300 mb-8 text-xs tracking-[0.2em] uppercase opacity-80">Toque para entrar</p>
-            
-            <button id="startSiteBtn" class="bg-white/20 border border-white/30 text-white px-10 py-4 rounded-full font-bold hover:bg-white/30 hover:scale-105 transition-all duration-300 cursor-pointer shadow-[0_4px_15px_rgba(0,0,0,0.2)] backdrop-blur-md">
-                Entrar ❤️
-            </button>
+            <button id="btnStartSite" class="bg-white/20 border border-white/30 text-white px-10 py-4 rounded-full font-bold hover:bg-white/30 hover:scale-105 transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.2)] backdrop-blur-md">Entrar ❤️</button>
         </div>
     </div>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="audioPlayer" preload="metadata"></audio>
 
-    <div id="mainScreen" class="max-w-md mx-auto p-4 flex flex-col gap-6 relative z-10">
+    <main id="mainScreen" class="max-w-md mx-auto p-4 flex flex-col gap-6 relative z-10">
         
-        <div class="flex flex-col gap-4 p-5 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+        <section class="flex flex-col gap-4 p-5 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
             <div class="w-full aspect-square relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                <img src="tela-inicial/nova.jpg" alt="Capa do Álbum" class="w-full h-full object-cover">
+                <img src="tela-inicial/nova.jpg" alt="Capa" loading="lazy" decoding="async" class="w-full h-full object-cover">
             </div>
             
             <div class="flex justify-between items-end mt-2">
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 id="songTitle" class="text-2xl font-bold text-white drop-shadow-md">Sonha Comigo</h1>
+                        <h2 id="songTitle" class="text-2xl font-bold text-white drop-shadow-md">Carregando...</h2>
                         <i class="fas fa-check-circle text-blue-400 text-lg"></i>
                     </div>
-                    <p id="songArtist" class="text-gray-300 text-sm">Nossa Música</p>
+                    <p id="songArtist" class="text-gray-300 text-sm">Aguarde</p>
                 </div>
-                
-                <i onclick="loveExplosion()" class="fas fa-heart text-2xl text-pink-500 cursor-pointer drop-shadow-sm hover:scale-125 transition-transform active:scale-90"></i>
+                <button id="btnLoveExplosion" aria-label="Explosão de corações" class="hover:scale-125 transition-transform active:scale-90"><i class="fas fa-heart text-2xl text-pink-500"></i></button>
             </div>
             
             <div class="w-full group mt-1">
-                <div id="progressBarContainer" class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden group-hover:h-2 transition-all cursor-pointer border border-white/5" onclick="seek(event)">
-                    <div id="progressBar" class="bg-white h-full w-0 rounded-full relative shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
-                </div>
+                <button id="progressBarContainer" aria-label="Avançar música" class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden group-hover:h-2 transition-all border border-white/5 block">
+                    <div id="progressBar" class="bg-white h-full w-0 rounded-full relative shadow-[0_0_10px_rgba(255,255,255,0.8)] pointer-events-none"></div>
+                </button>
                 <div class="flex justify-between text-xs text-gray-300 mt-2 font-mono opacity-80">
                     <span id="currentTime">0:00</span><span id="totalDuration">0:00</span>
                 </div>
             </div>
 
-            <div class="flex justify-between items-center px-4 mt-2">
-                <i id="shuffleBtn" onclick="toggleShuffle()" class="fas fa-random text-gray-400 text-lg hover:text-white transition cursor-pointer"></i>
-                <i onclick="prevSong()" class="fas fa-step-backward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
-                
-                <button onclick="togglePlay()" aria-label="Reproduzir" class="w-16 h-16 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform border border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                    <i id="playIcon" class="fas fa-play text-black text-2xl ml-1"></i>
+            <nav class="flex justify-between items-center px-4 mt-2">
+                <button id="btnShuffle" aria-label="Aleatório" class="text-gray-400 hover:text-white transition"><i class="fas fa-random text-lg pointer-events-none"></i></button>
+                <button id="btnPrev" aria-label="Anterior" class="hover:scale-110 transition"><i class="fas fa-step-backward text-white text-2xl pointer-events-none"></i></button>
+                <button id="btnPlay" aria-label="Play/Pause" class="w-16 h-16 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-105 transition-transform border border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    <i id="playIcon" class="fas fa-play text-black text-2xl ml-1 pointer-events-none"></i>
                 </button>
+                <button id="btnNext" aria-label="Próxima" class="hover:scale-110 transition"><i class="fas fa-step-forward text-white text-2xl pointer-events-none"></i></button>
+                <button id="btnRepeat" aria-label="Repetir" class="text-gray-400 hover:text-white transition"><i class="fas fa-redo text-lg pointer-events-none"></i></button>
+            </nav>
+        </section>
 
-                <i onclick="nextSong()" class="fas fa-step-forward text-white text-2xl cursor-pointer hover:scale-110 transition drop-shadow-md"></i>
-                <i id="repeatBtn" onclick="toggleRepeat()" class="fas fa-redo text-gray-400 text-lg hover:text-white transition cursor-pointer"></i>
-            </div>
-        </div>
-
-        <div class="rounded-3xl p-5 mt-2 bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+        <section class="rounded-3xl p-5 mt-2 bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
             <div class="relative w-full h-48 rounded-2xl overflow-hidden mb-5 shadow-lg border border-white/10">
-                <img src="tela-inicial/sobre_casal.jpg" alt="Foto do Casal" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                <img src="tela-inicial/sobre_casal.jpg" alt="Casal" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
                 <div class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
                     <p class="text-white font-bold text-xl drop-shadow-md">Sobre nós</p>
                 </div>
             </div>
             
-            <h2 class="text-2xl font-bold mb-1 drop-shadow-sm text-white">Neves e Anderson</h2>
-            
+            <h2 id="coupleNameDisplay" class="text-2xl font-bold mb-1 drop-shadow-sm text-white">Carregando...</h2>
             <p class="text-gray-300 text-sm mb-5">
-                <span onclick="openSecretLetter()" class="cursor-pointer hover:text-pink-400 transition-colors duration-300 border-b border-dashed border-gray-400 hover:border-pink-400" title="Há aqui um segredo...">Juntos desde 2025</span>
+                <button id="btnSecret" class="hover:text-pink-400 transition-colors duration-300 border-b border-dashed border-gray-400 hover:border-pink-400">Juntos desde 2025</button>
             </p>
             
-            <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="grid grid-cols-3 gap-3 text-center" aria-live="polite">
                 <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="years" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Anos</span></div>
                 <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="months" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Meses</span></div>
                 <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="days" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Dias</span></div>
@@ -119,59 +109,48 @@
                 <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="minutes" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Min</span></div>
                 <div class="bg-black/30 p-3 rounded-xl border border-white/10 shadow-inner"><span id="seconds" class="block text-2xl font-bold text-white">0</span><span class="text-[10px] text-gray-400 uppercase tracking-wider">Seg</span></div>
             </div>
-        </div>
+        </section>
 
-        <div class="rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 text-black" style="background: linear-gradient(135deg, #67dceb 0%, #4facfe 100%);">
-            <h3 class="font-bold text-lg mb-3 text-white drop-shadow-md flex items-center gap-2">
-                <i class="fas fa-envelope-open text-white"></i> Mensagem especial
-            </h3>
+        <section class="rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 text-black" style="background: linear-gradient(135deg, #67dceb 0%, #4facfe 100%);">
+            <h3 class="font-bold text-lg mb-3 text-white drop-shadow-md flex items-center gap-2"><i class="fas fa-envelope-open"></i> Mensagem especial</h3>
             <div id="messageContainer" class="max-h-40 overflow-hidden pr-2 transition-all duration-700 ease-in-out">
-                <p class="text-xl font-bold leading-relaxed text-white drop-shadow-sm">
-                    Você é o amor da minha vida e a pessoa que me faz querer ser melhor a cada novo dia 🥹💖.<br><br>
-                    Mais do que uma namorada maravilhosa, você é o motivo maior de eu ser feliz e querer viver 🫶🥺.<br><br>
-                    Seu sorriso ilumina meus dias e seu carinho aquece meu coração 💖❤️‍🔥.<br><br>
-                    Meu bem, eu amo você mais do que qualquer palavra pode expressar!🌍
-                </p>
+                <p id="specialMessageText" class="text-xl font-bold leading-relaxed text-white drop-shadow-sm"></p>
             </div>
-            <button onclick="toggleMessage(this)" class="mt-5 bg-white/20 hover:bg-white/30 text-white border border-white/40 px-5 py-2 rounded-full text-sm font-semibold transition-colors backdrop-blur-md shadow-sm">Ler tudo</button>
-        </div>
+            <button id="btnToggleMessage" class="mt-5 bg-white/20 hover:bg-white/30 text-white border border-white/40 px-5 py-2 rounded-full text-sm font-semibold transition-colors backdrop-blur-md shadow-sm">Ler tudo</button>
+        </section>
 
-        <div class="relative rounded-3xl overflow-hidden h-52 flex flex-col justify-end p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 bg-white/5 backdrop-blur-xl mt-2 mb-4">
-            <div class="absolute inset-0 z-0 overflow-hidden rounded-3xl">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-600 rounded-full blur-[80px] opacity-40 -translate-y-1/2 translate-x-1/4 animate-pulse"></div>
-                <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 rounded-full blur-[80px] opacity-40 translate-y-1/4 -translate-x-1/4 animate-pulse delay-1s"></div>
+        <section class="relative rounded-3xl overflow-hidden h-52 flex flex-col justify-end p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 bg-white/5 backdrop-blur-xl mt-2 mb-4">
+            <div class="absolute inset-0 z-0 overflow-hidden rounded-3xl pointer-events-none">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-600 rounded-full blur-[80px] opacity-40 -translate-y-1/2 translate-x-1/4 animate-pulse will-change-transform"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 rounded-full blur-[80px] opacity-40 translate-y-1/4 -translate-x-1/4 animate-pulse delay-1s will-change-transform"></div>
             </div>
             <div class="relative z-10">
                 <p class="text-pink-300 text-sm font-bold tracking-widest uppercase mb-1 drop-shadow-md">A nossa história</p>
                 <h2 class="text-4xl font-black leading-tight mb-4 text-white drop-shadow-lg">Wrapped</h2>
-                <button onclick="startWrapped()" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(255,255,255,0.3)] cursor-pointer">Vamos lá ✨</button>
+                <button id="btnStartWrapped" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(255,255,255,0.3)]">Vamos lá ✨</button>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <div id="wrappedScreen" class="fixed inset-0 z-50 bg-black hidden flex-col items-center justify-center">
         <div class="story-container relative w-full h-full max-w-md bg-black">
             <div class="absolute top-2 left-0 w-full px-2 flex gap-1 z-20" id="progressContainer"></div>
-
             <div class="absolute top-6 left-0 w-full px-4 flex justify-between items-center z-20 text-white drop-shadow-md">
                 <div class="flex items-center gap-2">
-                    <img src="tela-inicial/nova.jpg" alt="Avatar" class="w-8 h-8 rounded-full border border-white">
+                    <img src="tela-inicial/nova.jpg" alt="Avatar" loading="lazy" class="w-8 h-8 rounded-full border border-white">
                     <span class="font-bold text-sm">Nossa Retrospectiva</span>
                 </div>
-                <button onclick="closeWrapped()" aria-label="Fechar" class="text-xl px-2"><i class="fas fa-times"></i></button>
+                <button id="btnCloseWrapped" class="text-xl px-2"><i class="fas fa-times"></i></button>
             </div>
-
             <div class="w-full h-full flex items-center justify-center bg-gray-900">
-                <img id="storyImage" src="" alt="Story" class="w-full h-full object-cover hidden no-select">
-                <video id="storyVideo" playsinline class="w-full h-full object-cover hidden no-select"></video>
+                <img id="storyImage" src="" alt="Story" loading="lazy" decoding="async" class="w-full h-full object-cover hidden no-select">
+                <video id="storyVideo" playsinline preload="none" class="w-full h-full object-cover hidden no-select"></video>
             </div>
-
-            <div class="absolute bottom-10 w-full text-center z-20 px-4">
+            <div class="absolute bottom-10 w-full text-center z-20 px-4 pointer-events-none">
                 <p id="captionText" class="inline-block bg-black/50 px-4 py-2 rounded-xl text-white font-semibold backdrop-blur-sm"></p>
             </div>
-
-            <div id="leftZone" class="absolute top-0 left-0 w-1/3 h-full z-10 touch-none no-select"></div>
-            <div id="rightZone" class="absolute top-0 right-0 w-2/3 h-full z-10 touch-none no-select"></div>
+            <button id="leftZone" aria-label="Anterior" class="absolute top-0 left-0 w-1/3 h-full z-10 touch-none opacity-0"></button>
+            <button id="rightZone" aria-label="Próximo" class="absolute top-0 right-0 w-2/3 h-full z-10 touch-none opacity-0"></button>
         </div>
     </div>
 
@@ -180,28 +159,18 @@
             <i class="fas fa-calendar-check text-6xl text-white mb-5 animate-bounce drop-shadow-lg"></i>
             <h2 class="text-3xl font-black text-white mb-3 drop-shadow-md">Feliz nosso dia! 🥹😍🎉</h2>
             <p class="text-white/90 text-base mb-8 leading-relaxed font-medium">Meu amor, hoje é o nosso dia especial! Mais um mês a celebrar. Amo-te muito minha nenem! ❤️</p>
-            <button onclick="closeDay9Popup()" class="bg-white text-red-600 font-bold py-4 px-8 rounded-full shadow-xl hover:scale-105 transition-transform w-full">Receber os beijinhos</button>
+            <button id="btnCloseDay9" class="bg-white text-red-600 font-bold py-4 px-8 rounded-full shadow-xl hover:scale-105 transition-transform w-full">Receber os beijinhos</button>
         </div>
     </div>
 
     <div id="secretLetterModal" class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
-        <div class="bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] bg-[#fdfbf7] p-8 rounded-2xl max-w-sm w-full shadow-2xl relative border border-gray-300">
-            <button onclick="closeSecretLetter()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl transition-colors"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold text-pink-600 mb-5 flex items-center gap-2">
-                <i class="fas fa-envelope-open-text"></i> Segredo Desbloqueado
-            </h2>
-            <p class="text-gray-800 leading-relaxed font-serif text-base italic">
-                💖<br><br>
-                Queria apenas deixar registado aqui, que és a pessoa mais incrível que já conheci. Obrigado por cada sorriso, cada abraço e por tornares a minha vida muito mais colorida.<br><br>
-                te amo nenem.
-            </p>
+        <div class="bg-[#fdfbf7] p-8 rounded-2xl max-w-sm w-full shadow-2xl relative border border-gray-300">
+            <button id="btnCloseSecret" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl transition-colors"><i class="fas fa-times"></i></button>
+            <h2 class="text-xl font-bold text-pink-600 mb-5 flex items-center gap-2"><i class="fas fa-envelope-open-text"></i> Segredo</h2>
+            <p id="secretMessageText" class="text-gray-800 leading-relaxed font-serif text-base italic"></p>
         </div>
     </div>
 
-    <div id="updateToast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] bg-white text-pink-600 px-6 py-3 rounded-full font-bold shadow-2xl border border-pink-200 hidden cursor-pointer hover:scale-105 transition-transform text-sm text-center w-[90%] max-w-xs">
-        ✨ Nova surpresa adicionada!<br><span class="text-xs text-gray-600">Toque aqui para atualizar</span>
-    </div>
-
-    <script src="script.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
