@@ -1,0 +1,36 @@
+{
+  "startDate": "2025-08-09T00:00:00",
+  "coupleNames": "Neves e Anderson",
+  "messages": {
+    "special": "Você é o amor da minha vida e a pessoa que me faz querer ser melhor a cada novo dia 🥹💖.<br><br>Mais do que uma namorada maravilhosa, você é o motivo maior de eu ser feliz e querer viver 🫶🥺.<br><br>Seu sorriso ilumina meus dias e seu carinho aquece meu coração 💖❤️‍🔥.<br><br>Meu bem, eu amo você mais do que qualquer palavra pode expressar!🌍",
+    "secret": "💖<br><br>Queria apenas deixar registado aqui, que és a pessoa mais incrível que já conheci. Obrigado por cada sorriso, cada abraço e por tornares a minha vida muito mais colorida.<br><br>te amo nenem."
+  },
+  "songs": [
+    { "title": "Amor Meu Grande Amor", "artist": "Grande Amor", "src": "videoplayback7.mp3" },
+    { "title": "Sonha Comigo", "artist": "Nossa Música", "src": "videoplayback.weba" },
+    { "title": "Nosso Amor", "artist": "5km", "src": "videoplayback2.webm" },
+    { "title": "Eu vou te ser sincero", "artist": "Quero te ver de branco", "src": "videoplayback9.mp3" },
+    { "title": "Eu vejo você longe", "artist": "E quero você perto", "src": "videoplayback8.mp3" },
+    { "title": "Para Sempre", "artist": "duas metades", "src": "videoplayback3.webm" },
+    { "title": "Conto as horas para estar com você", "artist": "Longe De Você", "src": "videoplayback4.mp3" },
+    { "title": "Que Sorte A Nossa", "artist": "Tô querendo você", "src": "videoplayback5.mp3" },
+    { "title": "Pra Sempre Com Você", "artist": "Pra Sempre", "src": "videoplayback6.mp3" }
+  ],
+  "stories": [
+    { "type": "image", "src": "tela-wrapped/img2.jpg", "duration": 8500, "caption": "Eu vejo você longe e quero você perto❤️" },
+    { "type": "video", "src": "tela-wrapped/video1.webm", "duration": 8500, "caption": "amor da minha vida ❤️🌠" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_142558_242.webp", "duration": 5000, "caption": "Momentos únicos...😻" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_142617_834.webp", "duration": 5000, "caption": "Nossas memórias ❤️" },
+    { "type": "image", "src": "tela-wrapped/img1.jpg", "duration": 5000, "caption": "Conto as horas para estar com você🥹" },
+    { "type": "video", "src": "tela-wrapped/Video2.webm", "duration": 3500, "caption": "Teu sorriso...❤️" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_142657_499.webp", "duration": 5000, "caption": "Iluminas tudo!✨" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251006_162932_318.webp", "duration": 5000, "caption": "Juntos sempre.🫂" },
+    { "type": "image", "src": "tela-wrapped/sobre_casal.jpg", "duration": 6000, "caption": "Meu mundo🌌" },
+    { "type": "image", "src": "tela-wrapped/img3.jpg", "duration": 5000, "caption": "Pra Sempre Com Você🥹❤️🌌" },
+    { "type": "video", "src": "tela-wrapped/VID_20251229_140651_619.mp4", "duration": 5000, "caption": "Cada nosso reencontro🥹" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_153004_275.webp", "duration": 6000, "caption": "Minha garotinha❤️" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_142750_132.webp", "duration": 5000, "caption": "Sempre meu nenem.🥹" },
+    { "type": "video", "src": "tela-wrapped/output.webm", "duration": 4000, "caption": "Sempre voce.😍" },
+    { "type": "image", "src": "tela-wrapped/IMG_20251009_151428_109.webp", "duration": 6000, "caption": "Amo-te!❤️" }
+  ]
+}
