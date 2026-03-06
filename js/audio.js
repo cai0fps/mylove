@@ -9,7 +9,6 @@ export function initAudio(songs) {
     const progressBar = document.getElementById('progressBar');
     const progressContainer = document.getElementById('progressBarContainer');
     
-    // Recupera estado salvo ou inicia do zero
     let songIndex = parseInt(localStorage.getItem('mylove_songIndex')) || 0;
     let isShuffle = false;
     let isRepeat = false;
@@ -19,44 +18,62 @@ export function initAudio(songs) {
         document.getElementById('songTitle').innerText = songs[index].title;
         document.getElementById('songArtist').innerText = songs[index].artist;
         
-        // Retoma o tempo salvo se for a mesma música
         const savedTime = parseFloat(localStorage.getItem('mylove_currentTime'));
         if (savedTime && audio.readyState > 0) audio.currentTime = savedTime;
         localStorage.setItem('mylove_songIndex', index);
     }
 
     function togglePlay() {
-        if (audio.paused) audio.play();
+        if (audio.paused) audio.play().catch(e => console.error(e));
         else audio.pause();
     }
 
     function nextSong() {
         if (isShuffle) {
             let newIndex = songIndex;
-            while (newIndex === songIndex && songs.length > 1) {
-                newIndex = Math.floor(Math.random() * songs.length);
+            if (songs.length > 1) {
+                while (newIndex === songIndex) {
+                    newIndex = Math.floor(Math.random() * songs.length);
+                }
             }
             songIndex = newIndex;
         } else {
             songIndex = (songIndex + 1) % songs.length;
         }
-        localStorage.setItem('mylove_currentTime', '0'); // Reseta tempo na troca
+        localStorage.setItem('mylove_currentTime', '0');
         loadSong(songIndex);
-        audio.play();
+        audio.play().catch(e => console.error(e));
     }
 
     function prevSong() {
         songIndex = (songIndex - 1 + songs.length) % songs.length;
         localStorage.setItem('mylove_currentTime', '0');
         loadSong(songIndex);
-        audio.play();
+        audio.play().catch(e => console.error(e));
     }
 
-    // Event Listeners
+    // Eventos de Controle Básico
     playBtn.addEventListener('click', togglePlay);
     nextBtn.addEventListener('click', nextSong);
     prevBtn.addEventListener('click', prevSong);
     audio.addEventListener('ended', nextSong);
+
+    // Lógica de Aleatório e Repetir
+    shuffleBtn.addEventListener('click', () => {
+        isShuffle = !isShuffle;
+        shuffleBtn.classList.toggle('text-pink-500', isShuffle);
+        shuffleBtn.classList.toggle('text-gray-400', !isShuffle);
+        // Garante que o ícone interno também mude de cor
+        shuffleBtn.querySelector('i').classList.toggle('text-pink-500', isShuffle);
+    });
+
+    repeatBtn.addEventListener('click', () => {
+        isRepeat = !isRepeat;
+        audio.loop = isRepeat; // Faz o áudio repetir nativamente
+        repeatBtn.classList.toggle('text-pink-500', isRepeat);
+        repeatBtn.classList.toggle('text-gray-400', !isRepeat);
+        repeatBtn.querySelector('i').classList.toggle('text-pink-500', isRepeat);
+    });
 
     audio.addEventListener('play', () => {
         playIcon.classList.replace('fa-play', 'fa-pause');
@@ -75,7 +92,6 @@ export function initAudio(songs) {
             progressBar.style.width = `${(current / duration) * 100}%`;
             document.getElementById('currentTime').innerText = formatTime(current);
             document.getElementById('totalDuration').innerText = formatTime(duration);
-            // Salva progresso a cada segundo para não floodar localStorage
             if (Math.floor(current) % 2 === 0) localStorage.setItem('mylove_currentTime', current);
         }
     });
@@ -84,19 +100,6 @@ export function initAudio(songs) {
         const width = progressContainer.clientWidth;
         const clickX = e.offsetX;
         audio.currentTime = (clickX / width) * audio.duration;
-    });
-
-    shuffleBtn.addEventListener('click', () => {
-        isShuffle = !isShuffle;
-        shuffleBtn.classList.toggle('text-pink-500', isShuffle);
-        shuffleBtn.classList.toggle('text-gray-400', !isShuffle);
-    });
-
-    repeatBtn.addEventListener('click', () => {
-        isRepeat = !isRepeat;
-        audio.loop = isRepeat;
-        repeatBtn.classList.toggle('text-pink-500', isRepeat);
-        repeatBtn.classList.toggle('text-gray-400', !isRepeat);
     });
 
     function formatTime(sec) {
