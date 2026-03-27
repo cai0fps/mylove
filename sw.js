@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mylove-cache-v20';
+const CACHE_NAME = 'mylove-cache-v21';
 
 const APP_SHELL = [
   './',
