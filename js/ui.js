@@ -30,7 +30,34 @@ export function initUI(config) {
         document.getElementById('secretLetterModal').classList.remove('flex');
     });
 
-    document.getElementById('btnLoveExplosion').addEventListener('click', loveExplosion);
+    const btnLove = document.getElementById('btnLoveExplosion');
+    const heartIcon = btnLove.querySelector('i');
+    
+    const isLiked = localStorage.getItem('mylove_liked') === 'true';
+    if (isLiked) {
+        heartIcon.classList.remove('far', 'text-white');
+        heartIcon.classList.add('fas', 'text-pink-500');
+    } else {
+        heartIcon.classList.remove('fas', 'text-pink-500');
+        heartIcon.classList.add('far', 'text-white');
+    }
+
+    btnLove.addEventListener('click', () => {
+        loveExplosion();
+
+        const currentlyLiked = heartIcon.classList.contains('fas');
+        
+        if (currentlyLiked) {
+            heartIcon.classList.remove('fas', 'text-pink-500');
+            heartIcon.classList.add('far', 'text-white');
+            localStorage.setItem('mylove_liked', 'false');
+        } else {
+            heartIcon.classList.remove('far', 'text-white');
+            heartIcon.classList.add('fas', 'text-pink-500');
+            localStorage.setItem('mylove_liked', 'true');
+        }
+    });
+
     document.getElementById('btnCloseDay9').addEventListener('click', closeDay9Popup);
 
     checkDay9Surprise();
@@ -81,6 +108,9 @@ function closeDay9Popup() {
     popup.classList.replace('opacity-100', 'opacity-0');
     setTimeout(() => {
         popup.classList.add('hidden');
+        popup.classList.remove('flex');
+    }, 500);
+            }        popup.classList.add('hidden');
         popup.classList.remove('flex');
     }, 500);
 }
