@@ -18,9 +18,15 @@ export function initAudio(songs) {
         document.getElementById('songTitle').innerText = songs[index].title;
         document.getElementById('songArtist').innerText = songs[index].artist;
         
-        const savedTime = parseFloat(localStorage.getItem('mylove_currentTime'));
-        if (savedTime && audio.readyState > 0) audio.currentTime = savedTime;
         localStorage.setItem('mylove_songIndex', index);
+
+        audio.addEventListener('loadedmetadata', function onLoaded() {
+            const savedTime = parseFloat(localStorage.getItem('mylove_currentTime'));
+            if (savedTime && savedTime < audio.duration) {
+                audio.currentTime = savedTime;
+            }
+            audio.removeEventListener('loadedmetadata', onLoaded);
+        });
     }
 
     function togglePlay() {
@@ -92,7 +98,7 @@ export function initAudio(songs) {
             progressBar.style.width = `${(current / duration) * 100}%`;
             document.getElementById('currentTime').innerText = formatTime(current);
             document.getElementById('totalDuration').innerText = formatTime(duration);
-            if (Math.floor(current) % 2 === 0) localStorage.setItem('mylove_currentTime', current);
+            localStorage.setItem('mylove_currentTime', current);
         }
     });
 
