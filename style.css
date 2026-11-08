@@ -92,7 +92,7 @@ body {
     bottom: -10vh;
     color: #ff4757; 
     font-size: 25px;
-    z-index: 0; 
+    z-index: 100; 
     animation: floatUp linear forwards;
     pointer-events: none;
     text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
@@ -112,3 +112,4 @@ body {
     user-select: none;
     outline: none;
 }
+

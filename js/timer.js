@@ -2,22 +2,52 @@ export function initTimer(startDateString) {
     const startDate = new Date(startDateString);
     
     function updateCounter() {
-        const diff = new Date() - startDate;
-        if (diff < 0) return;
+        const now = new Date();
+        if (now < startDate) return;
 
-        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-        const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
-        const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        let years = now.getFullYear() - startDate.getFullYear();
+        let months = now.getMonth() - startDate.getMonth();
+        let days = now.getDate() - startDate.getDate();
+        let hours = now.getHours() - startDate.getHours();
+        let minutes = now.getMinutes() - startDate.getMinutes();
+        let seconds = now.getSeconds() - startDate.getSeconds();
 
-        document.getElementById('years').innerText = years;
-        document.getElementById('months').innerText = months;
-        document.getElementById('days').innerText = days;
-        document.getElementById('hours').innerText = hours;
-        document.getElementById('minutes').innerText = minutes;
-        document.getElementById('seconds').innerText = seconds;
+        if (seconds < 0) {
+            seconds += 60;
+            minutes--;
+        }
+        if (minutes < 0) {
+            minutes += 60;
+            hours--;
+        }
+        if (hours < 0) {
+            hours += 24;
+            days--;
+        }
+        if (days < 0) {
+            // Dias no mês anterior
+            const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
+            days += prevMonthDate.getDate();
+            months--;
+        }
+        if (months < 0) {
+            months += 12;
+            years--;
+        }
+
+        const elYears = document.getElementById('years');
+        const elMonths = document.getElementById('months');
+        const elDays = document.getElementById('days');
+        const elHours = document.getElementById('hours');
+        const elMinutes = document.getElementById('minutes');
+        const elSeconds = document.getElementById('seconds');
+
+        if (elYears) elYears.innerText = years;
+        if (elMonths) elMonths.innerText = months;
+        if (elDays) elDays.innerText = days;
+        if (elHours) elHours.innerText = hours;
+        if (elMinutes) elMinutes.innerText = minutes;
+        if (elSeconds) elSeconds.innerText = seconds;
     }
     
     setInterval(updateCounter, 1000);

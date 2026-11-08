@@ -1,48 +1,88 @@
 export function initUI(config) {
-    document.getElementById('coupleNameDisplay').innerText = config.coupleNames || '';
-    document.getElementById('specialMessageText').innerHTML = config.messages?.special || '';
-    document.getElementById('secretMessageText').innerHTML = config.messages?.secret || '';
+    const coupleNameEl = document.getElementById('coupleNameDisplay');
+    if (coupleNameEl) coupleNameEl.innerText = config.coupleNames || '';
+
+    const specialMsgEl = document.getElementById('specialMessageText');
+    if (specialMsgEl) specialMsgEl.innerHTML = config.messages?.special || '';
+
+    const secretMsgEl = document.getElementById('secretMessageText');
+    if (secretMsgEl) secretMsgEl.innerHTML = config.messages?.secret || '';
+
+    // Ajusta o ano dinâmico em "Juntos desde ..." se a data estiver configurada
+    if (config.startDate) {
+        const startYear = new Date(config.startDate).getFullYear();
+        const btnSecret = document.getElementById('btnSecret');
+        if (btnSecret && !isNaN(startYear)) {
+            btnSecret.innerText = `Juntos desde ${startYear}`;
+        }
+    }
 
     const overlay = document.getElementById('overlay');
+    const btnStartSite = document.getElementById('btnStartSite');
     
-    document.getElementById('btnStartSite').addEventListener('click', () => {
-        const audio = document.getElementById('audioPlayer');
-        if (audio) audio.play().catch(() => {});
-        if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.style.display = 'none', 1000);
-        }
-    });
+    if (btnStartSite) {
+        btnStartSite.addEventListener('click', () => {
+            const audio = document.getElementById('audioPlayer');
+            if (audio) {
+                audio.play().catch(() => {});
+            }
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 1000);
+            }
+        });
+    }
 
-    document.getElementById('btnToggleMessage').addEventListener('click', function() {
-        const container = document.getElementById('messageContainer');
-        if (!container) return;
-        const isExpanded = container.classList.contains('max-h-[1000px]');
-        container.classList.toggle('max-h-40', isExpanded);
-        container.classList.toggle('max-h-[1000px]', !isExpanded);
-        this.innerText = isExpanded ? "Ler tudo" : "Recolher";
-    });
+    const btnToggleMessage = document.getElementById('btnToggleMessage');
+    if (btnToggleMessage) {
+        btnToggleMessage.addEventListener('click', function() {
+            const container = document.getElementById('messageContainer');
+            if (!container) return;
+            const isExpanded = container.classList.contains('max-h-[1000px]');
+            container.classList.toggle('max-h-40', isExpanded);
+            container.classList.toggle('max-h-[1000px]', !isExpanded);
+            this.innerText = isExpanded ? "Ler tudo" : "Recolher";
+        });
+    }
 
-    document.getElementById('btnSecret').addEventListener('click', () => {
-        const modal = document.getElementById('secretLetterModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-    });
+    // Modal de segredo
+    const secretModal = document.getElementById('secretLetterModal');
+    const btnSecret = document.getElementById('btnSecret');
+    const btnCloseSecret = document.getElementById('btnCloseSecret');
 
-    document.getElementById('btnCloseSecret').addEventListener('click', () => {
-        const modal = document.getElementById('secretLetterModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    });
+    if (btnSecret && secretModal) {
+        btnSecret.addEventListener('click', () => {
+            secretModal.classList.remove('hidden');
+            secretModal.classList.add('flex');
+        });
+    }
 
+    if (btnCloseSecret && secretModal) {
+        btnCloseSecret.addEventListener('click', () => {
+            secretModal.classList.add('hidden');
+            secretModal.classList.remove('flex');
+        });
+    }
+
+    // Fechar modal de segredo ao clicar no fundo escuro
+    if (secretModal) {
+        secretModal.addEventListener('click', (e) => {
+            if (e.target === secretModal) {
+                secretModal.classList.add('hidden');
+                secretModal.classList.remove('flex');
+            }
+        });
+    }
+
+    // Botão de curtida / explosão de corações
     const btnLove = document.getElementById('btnLoveExplosion');
     if (btnLove) {
         const heartIcon = btnLove.querySelector('i');
-        const isLiked = localStorage.getItem('mylove_liked') === 'true';
+        const savedLike = localStorage.getItem('mylove_liked');
+        // Se ainda não houver valor salvo, padrão é curtido (true)
+        const isLiked = savedLike !== null ? savedLike === 'true' : true;
         
         if (heartIcon) {
             if (isLiked) {
@@ -77,32 +117,39 @@ export function initUI(config) {
         btnCloseDay9.addEventListener('click', closeDay9Popup);
     }
 
+    const day9Popup = document.getElementById('day9Popup');
+    if (day9Popup) {
+        day9Popup.addEventListener('click', (e) => {
+            if (e.target === day9Popup) {
+                closeDay9Popup();
+            }
+        });
+    }
+
     checkDay9Surprise();
 }
 
-function loveExplosion() {
-    for (let i = 0; i < 15; i++) {
-        setTimeout(createHeart, i * 100);
+export function loveExplosion() {
+    for (let i = 0; i < 16; i++) {
+        setTimeout(createHeart, i * 90);
     }
 }
 
 function createHeart() {
     const heart = document.createElement('div');
-    heart.className = 'heart-bg fixed z-[100] text-pink-500 drop-shadow-md pointer-events-none';
+    heart.className = 'heart-bg fixed z-[100] text-pink-500 drop-shadow-md pointer-events-none select-none';
     heart.innerHTML = '❤️';
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.top = '100vh';
-    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-    heart.style.transition = `transform ${Math.random() * 2 + 3}s linear, opacity 3s`;
+    heart.style.left = (Math.random() * 92 + 4) + 'vw';
+    heart.style.bottom = '-10vh';
+    
+    const size = Math.random() * 20 + 20;
+    heart.style.fontSize = `${size}px`;
+    
+    const duration = Math.random() * 2 + 3; // 3 a 5 segundos
+    heart.style.animationDuration = `${duration}s`;
     
     document.body.appendChild(heart);
-    
-    requestAnimationFrame(() => {
-        heart.style.transform = `translateY(-120vh) rotate(${Math.random() * 360}deg)`;
-        heart.style.opacity = '0';
-    });
-    
-    setTimeout(() => heart.remove(), 5000);
+    setTimeout(() => heart.remove(), duration * 1000 + 100);
 }
 
 function checkDay9Surprise() {

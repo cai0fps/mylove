@@ -29,3 +29,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Falha crítica na inicialização do MyLove:', error);
     }
 });
+
+// Registra Service Worker para funcionamento offline e PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+            console.log('Falha ao registrar Service Worker:', err);
+        });
+    });
+}
